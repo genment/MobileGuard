@@ -34,6 +34,8 @@ public class SplashActivity extends Activity {
         //显示版本号
         ((TextView) findViewById(R.id.version_name)).setText(getString(R.string.version_name, BuildConfig.VERSION_NAME));
 
+        updateInfo = new Bundle();
+        updateInfo.putBoolean("hasNewVersion", false); // 默认为false
         requestQueue = Volley.newRequestQueue(this);
         checkNewVersion();
 
@@ -47,14 +49,10 @@ public class SplashActivity extends Activity {
                 try {
                     int versionCode = jsonObject.getInt("versionCode");
                     if (versionCode > BuildConfig.VERSION_CODE) {
-                        updateInfo = new Bundle(4);
                         updateInfo.putBoolean("hasNewVersion", true);
                         updateInfo.putString("versionName", jsonObject.getString("versionName"));
                         updateInfo.putString("desc", jsonObject.getString("desc"));
                         updateInfo.putString("apk", jsonObject.getString("apk"));
-                    } else {
-                        updateInfo = new Bundle(1);
-                        updateInfo.putBoolean("hasNewVersion", false);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -63,7 +61,7 @@ public class SplashActivity extends Activity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "网络异常, 请检查网络是否开启", Toast.LENGTH_SHORT).show();
             }
         }));
     }
