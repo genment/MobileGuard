@@ -1,8 +1,7 @@
 package gmt.mobileguard.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,12 +15,16 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import gmt.mobileguard.BuildConfig;
 import gmt.mobileguard.R;
 
 public class SplashActivity extends Activity {
 
     private RequestQueue requestQueue;
+    private Bundle updateInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class SplashActivity extends Activity {
 
         requestQueue = Volley.newRequestQueue(this);
         checkNewVersion();
+
+        waitForShowSplash();
     }
 
     private void checkNewVersion() {
@@ -42,23 +47,14 @@ public class SplashActivity extends Activity {
                 try {
                     int versionCode = jsonObject.getInt("versionCode");
                     if (versionCode > BuildConfig.VERSION_CODE) {
-                        new AlertDialog.Builder(SplashActivity.this)
-                                .setTitle("发现新版本: " + jsonObject.getString("versionName"))
-                                .setMessage(jsonObject.getString("desc"))
-                                .setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Toast.makeText(getApplicationContext(), "正在下载新版本", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .setNegativeButton("以后再说", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Toast.makeText(getApplicationContext(), "取消更新", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .setCancelable(false) // 不能关闭, 只能选择
-                                .show();
+                        updateInfo = new Bundle(4);
+                        updateInfo.putBoolean("hasNewVersion", true);
+                        updateInfo.putString("versionName", jsonObject.getString("versionName"));
+                        updateInfo.putString("desc", jsonObject.getString("desc"));
+                        updateInfo.putString("apk", jsonObject.getString("apk"));
+                    } else {
+                        updateInfo = new Bundle(1);
+                        updateInfo.putBoolean("hasNewVersion", false);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -72,4 +68,19 @@ public class SplashActivity extends Activity {
         }));
     }
 
+    private void waitForShowSplash() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                goHomeActivity();
+            }
+        }, 1500);
+    }
+
+    private void goHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtras(updateInfo);
+        startActivity(intent);
+        finish();
+    }
 }
