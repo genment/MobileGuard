@@ -3,4 +3,5 @@
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">开启手机卫士的神器之旅</string>
+    <string name="version_name">版本号：%s</string>
 </resources>
