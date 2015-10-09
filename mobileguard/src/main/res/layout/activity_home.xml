@@ -11,14 +11,21 @@
     <TextView
         android:id="@+id/home_notice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/warning_background"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="@dimen/common_padding"
+        android:singleLine="true"
+        android:text="@string/home_notice"
+        android:textSize="16sp" />
 
     <GridView
         android:id="@+id/home_gridview"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="3"
-        android:verticalSpacing="50dp" />
+        android:verticalSpacing="35dp" />
 
 </LinearLayout>
