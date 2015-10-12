@@ -1,27 +1,32 @@
 package gmt.mobileguard.activity;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import gmt.mobileguard.R;
 import gmt.mobileguard.sevice.UpdateService;
+import gmt.mobileguard.util.EncryptUtil;
 
 public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private GridView gridView;
     private TextView notice;
+    private AlertDialog dialog;
 
     private Class[] item_class = {
             // TODO: 2015/9/21 定义各个功能的 Activity.class
@@ -47,11 +52,10 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("功能列表");
         setSupportActionBar(toolbar);
 
         notice = (TextView) findViewById(R.id.home_notice);
-        gridView = ((GridView) findViewById(R.id.home_gridview));
+        gridView = (GridView) findViewById(R.id.home_gridview);
         gridView.setAdapter(new GridViewAdapter());
         gridView.setOnItemClickListener(this);
 
@@ -93,11 +97,76 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // TODO: 2015/9/21 点击item后，跳转到各个功能界面
-        if (item_class[position] != null) {
+        // TODO: 2015/9/21 点击item后，跳转到各个功能界面(position==0除外,另外处理)
+        if (position == 0) {
+            showDialog();
+        } else if (item_class[position] != null) {
             Intent intent = new Intent(this, item_class[position]);
             startActivity(intent);
         }
+    }
+
+    /**
+     * 手机防盗的Dialog
+     * <p/>
+     * <p>点击按钮后对话框不消失的解决方案</p>
+     * <a href="http://stackoverflow.com/questions/2620444/how-to-prevent-a-dialog-from-closing-when-a-button-is-clicked">How to prevent a dialog from closing when a button is clicked</a>
+     */
+    private void showDialog() {
+        final SharedPreferences sharedPref = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+        final boolean configed = sharedPref.getBoolean("sjfd_config", false);
+        View dialogView;
+        final EditText pwd2;
+        if (configed) {
+            dialogView = getLayoutInflater().inflate(R.layout.dialog_password_2, null);
+            pwd2 = null;
+        } else {
+            dialogView = getLayoutInflater().inflate(R.layout.dialog_password_1, null);
+            pwd2 = (EditText) dialogView.findViewById(R.id.password2);
+        }
+        final EditText pwd1 = (EditText) dialogView.findViewById(R.id.password);
+
+        dialog = new AlertDialog.Builder(this)
+                .setTitle(configed ? "输入密码" : "设置密码")
+                .setView(dialogView)
+                .setPositiveButton("确定", null) // 为了在验证密码时不会dismiss
+                .setNegativeButton("取消", null)
+                .show();
+
+        // 为了在验证密码时不会dismiss，重写了PositiveButton的OnClickListener
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 已设置
+                if (configed) {
+                    if (!checkPassword(EncryptUtil.md5(pwd1.getText().toString()),
+                            sharedPref.getString("sjfd_pwd", null))) {
+                        Toast.makeText(HomeActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                // 未设置
+                else {
+                    if (checkPassword(pwd1.getText().toString(), pwd2.getText().toString()) &&
+                            sharedPref.edit()
+                                    .putString("sjfd_pwd", EncryptUtil.md5(pwd1.getText().toString()))
+                                    .putBoolean("sjfd_config", true)
+                                    .commit()) {
+                        Toast.makeText(HomeActivity.this, "设置密码成功！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        pwd2.setError("密码不一致");
+                        return;
+                    }
+                }
+                dialog.dismiss();
+                // TODO: 2015/10/11 如果configed，进入[手机防盗]界面，否则进入[向导]界面
+                //startActivity(new Intent(HomeActivity.this, configed ? item_class[0] : null));
+            }
+        });
+    }
+
+    private boolean checkPassword(String pwd1, String pwd2) {
+        return !TextUtils.isEmpty(pwd1) && TextUtils.equals(pwd1, pwd2);
     }
 
     class GridViewAdapter extends BaseAdapter {

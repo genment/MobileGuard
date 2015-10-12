@@ -3,4 +3,6 @@
     <string name="dummy_content">开启手机卫士的神器之旅</string>
     <string name="version_name">版本号：%s</string>
     <string name="home_notice">手机卫士正式版上线啦，全面为你的爱机保驾护航！亲们，赶紧升级到最新版本吧！更有机会赢得iPhone6s Plus哦！</string>
+    <string name="tip_password">请输入密码</string>
+    <string name="tip_password_again">请再次输入密码</string>
 </resources>

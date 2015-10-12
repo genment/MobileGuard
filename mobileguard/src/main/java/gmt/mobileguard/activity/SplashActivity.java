@@ -43,7 +43,7 @@ public class SplashActivity extends Activity {
     }
 
     private void checkNewVersion() {
-        requestQueue.add(new JsonObjectRequest("http://192.168.1.4/update.php", new Response.Listener<JSONObject>() {
+        requestQueue.add(new JsonObjectRequest("http://192.168.1.2/update.php", new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 try {
