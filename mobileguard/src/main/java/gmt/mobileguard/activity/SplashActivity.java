@@ -35,7 +35,6 @@ public class SplashActivity extends Activity {
         ((TextView) findViewById(R.id.version_name)).setText(getString(R.string.version_name, BuildConfig.VERSION_NAME));
 
         updateInfo = new Bundle();
-        updateInfo.putBoolean("hasNewVersion", false); // 默认为false
         requestQueue = Volley.newRequestQueue(this);
         checkNewVersion();
 
@@ -49,7 +48,6 @@ public class SplashActivity extends Activity {
                 try {
                     int versionCode = jsonObject.getInt("versionCode");
                     if (versionCode > BuildConfig.VERSION_CODE) {
-                        updateInfo.putBoolean("hasNewVersion", true);
                         updateInfo.putString("versionName", jsonObject.getString("versionName"));
                         updateInfo.putString("desc", jsonObject.getString("desc"));
                         updateInfo.putString("apk", jsonObject.getString("apk"));

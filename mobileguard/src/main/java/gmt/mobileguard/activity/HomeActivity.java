@@ -30,7 +30,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private Class[] item_class = {
             // TODO: 2015/9/21 定义各个功能的 Activity.class
-            null, null, null,
+            SecurityActivity.class, null, null,
             null, null, null,
             null, null, null
     };
@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void getNewVersion() {
         final Bundle updateInfo = getIntent().getExtras();
-        if (updateInfo.getBoolean("hasNewVersion")) { // 如果有新版本
+        if (updateInfo != null && !updateInfo.isEmpty()) { // 如果有新版本
             new AlertDialog.Builder(this)
                     .setTitle("发现新版本: " + updateInfo.getString("versionName"))
                     .setMessage(updateInfo.getString("desc"))
@@ -160,7 +160,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 dialog.dismiss();
                 // TODO: 2015/10/11 如果configed，进入[手机防盗]界面，否则进入[向导]界面
-                //startActivity(new Intent(HomeActivity.this, configed ? item_class[0] : null));
+                startActivity(new Intent(HomeActivity.this, item_class[0]));
             }
         });
     }
