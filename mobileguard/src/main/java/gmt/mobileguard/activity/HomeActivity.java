@@ -159,8 +159,10 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 }
                 dialog.dismiss();
-                // TODO: 2015/10/11 如果configed，进入[手机防盗]界面，否则进入[向导]界面
-                startActivity(new Intent(HomeActivity.this, item_class[0]));
+                // TODO: 2015/10/11 通过configed的值，决定SecurityActivity显示[向导]还是[手机防盗]的Fragment
+                Intent intent = new Intent(HomeActivity.this, item_class[0]);
+                intent.putExtra("configed", configed);
+                startActivity(intent);
             }
         });
     }

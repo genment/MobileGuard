@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="gmt.mobileguard.activity.SecurityActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/common_margin"
+        android:src="@drawable/setup1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:text="@string/tip_guide1_0"
+            android:textColor="#333"
+            android:textSize="20sp" />
+
+        <TextView
+            style="@style/Guide_TextView"
+            android:text="@string/tip_guide1_1" />
+
+        <TextView
+            style="@style/Guide_TextView"
+            android:text="@string/tip_guide1_2" />
+
+        <TextView
+            style="@style/Guide_TextView"
+            android:text="@string/tip_guide1_3" />
+
+        <TextView
+            style="@style/Guide_TextView"
+            android:text="@string/tip_guide1_4" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_margin="5dp"
+            android:background="@color/md_green_400" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_margin="5dp"
+            android:background="@color/md_grey_300" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_margin="5dp"
+            android:background="@color/md_grey_300" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_margin="5dp"
+            android:background="@color/md_grey_300" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/next_step"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/common_margin"
+        android:background="@drawable/btn_common"
+        android:text="@string/next_step"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+</LinearLayout>

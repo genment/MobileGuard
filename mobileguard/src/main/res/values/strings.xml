@@ -5,4 +5,15 @@
     <string name="home_notice">手机卫士正式版上线啦，全面为你的爱机保驾护航！亲们，赶紧升级到最新版本吧！更有机会赢得iPhone6s Plus哦！</string>
     <string name="tip_password">请输入密码</string>
     <string name="tip_password_again">请再次输入密码</string>
+    <string name="title_security">手机防盗</string>
+    <string name="title_guide1">手机防盗 - 欢迎</string>
+    <string name="tip_guide1_0">开启后将可用以下功能：</string>
+    <string name="tip_guide1_1">SIM卡变更报警</string>
+    <string name="tip_guide1_2">GPS追踪</string>
+    <string name="tip_guide1_3">远程销毁数据</string>
+    <string name="tip_guide1_4">远程锁屏</string>
+    <string name="title_guide2">手机防盗 - 绑定SIM卡</string>
+    <string name="title_guide3">手机防盗 - 设置安全号码</string>
+    <string name="prev_step">上一步</string>
+    <string name="next_step">下一步</string>
 </resources>
