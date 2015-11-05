@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:background="@drawable/btn_common"
-            android:text="@string/next_step"
+            android:text="@string/succeed"
             android:textColor="@color/white"
             android:textSize="18sp" />
     </RelativeLayout>
