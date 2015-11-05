@@ -25,7 +25,7 @@
             android:layout_margin="@dimen/common_margin"
             android:text="@string/tip_guide1_0"
             android:textColor="#333"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             style="@style/Guide_TextView"
@@ -59,19 +59,19 @@
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_margin="5dp"
-            android:background="@color/md_grey_300" />
+            android:background="@color/md_grey_400" />
 
         <View
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_margin="5dp"
-            android:background="@color/md_grey_300" />
+            android:background="@color/md_grey_400" />
 
         <View
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_margin="5dp"
-            android:background="@color/md_grey_300" />
+            android:background="@color/md_grey_400" />
     </LinearLayout>
 
     <Button
@@ -83,6 +83,6 @@
         android:background="@drawable/btn_common"
         android:text="@string/next_step"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
 </LinearLayout>
