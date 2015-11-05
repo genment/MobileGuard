@@ -22,4 +22,7 @@
     <string name="tip_guide2_2">开启绑定SIM卡</string>
     <string name="tip_guide2_3_off">未绑定SIM卡</string>
     <string name="tip_guide2_3_on">已绑定SIM卡</string>
+    <string name="tip_guide3_1">在SIM卡变更后，报警短信将会发送到指定的安全号码。</string>
+    <string name="tip_guide3_2">请输入安全号码</string>
+    <string name="tip_guide3_3">从联系人中选择</string>
 </resources>
