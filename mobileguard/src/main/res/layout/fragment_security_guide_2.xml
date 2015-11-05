@@ -30,6 +30,7 @@
             style="@style/Guide_TextView"
             android:layout_width="match_parent"
             android:layout_margin="@dimen/common_margin"
+            android:checked="true"
             android:drawableLeft="@null"
             android:gravity="start|center_vertical"
             android:text="@string/tip_guide2_2" />
@@ -38,7 +39,7 @@
             android:id="@+id/guide_2_bind_sim_tips"
             style="@style/Guide_TextView"
             android:drawableLeft="@null"
-            android:text="@string/tip_guide2_3_off"
+            android:text="@string/tip_guide2_3_on"
             android:textColor="@color/md_grey_500"
             android:textSize="16sp" />
     </LinearLayout>
