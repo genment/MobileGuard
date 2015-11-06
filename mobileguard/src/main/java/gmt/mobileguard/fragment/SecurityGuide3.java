@@ -70,9 +70,9 @@ public class SecurityGuide3 extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), R.string.tip_guide3_3, Toast.LENGTH_SHORT).show();
         } else if (mListener != null) {
             if (v.getId() == R.id.next_step) {
-                mListener.onStepButtonClicked(3, true);
+                mListener.onStepButtonClicked(4);
             } else {
-                mListener.onStepButtonClicked(3, false);
+                mListener.onStepButtonClicked(2);
             }
         }
     }
@@ -108,9 +108,8 @@ public class SecurityGuide3 extends Fragment implements View.OnClickListener {
         /**
          * 当步骤按钮被点击时回调
          *
-         * @param guide_id 当前 Guide 位置
-         * @param next     下一步还是上一步，true 表示 下一步，false 表示 上一步
+         * @param goToGuide 要切换到哪个 Guide
          */
-        public void onStepButtonClicked(int guide_id, boolean next);
+        public void onStepButtonClicked(int goToGuide);
     }
 }

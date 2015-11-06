@@ -76,9 +76,9 @@ public class SecurityGuide4 extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (mListener != null) {
             if (v.getId() == R.id.next_step) {
-                mListener.onStepButtonClicked(4, true);
+                mListener.onStepButtonClicked(5);
             } else {
-                mListener.onStepButtonClicked(4, false);
+                mListener.onStepButtonClicked(3);
             }
         }
     }
@@ -114,9 +114,8 @@ public class SecurityGuide4 extends Fragment implements View.OnClickListener {
         /**
          * 当步骤按钮被点击时回调
          *
-         * @param guide_id 当前 Guide 位置
-         * @param next     下一步还是上一步，true 表示 下一步，false 表示 上一步
+         * @param goToGuide 要切换到哪个 Guide
          */
-        public void onStepButtonClicked(int guide_id, boolean next);
+        public void onStepButtonClicked(int goToGuide);
     }
 }

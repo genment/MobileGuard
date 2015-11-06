@@ -39,41 +39,28 @@ public class SecurityActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onStepButtonClicked(int guide_id, boolean next) {
-        int titleId = 0;
+    public void onStepButtonClicked(int goToGuide) {
+        int titleId = R.string.title_security;
         Fragment fragment = null;
-        switch (guide_id) {
+        switch (goToGuide) {
             case 1:
+                titleId = R.string.title_guide1;
+                fragment = new SecurityGuide1();
+                break;
+            case 2:
                 titleId = R.string.title_guide2;
                 fragment = new SecurityGuide2();
                 break;
-            case 2:
-                if (next) {
-                    titleId = R.string.title_guide3;
-                    fragment = new SecurityGuide3();
-                } else {
-                    titleId = R.string.title_guide1;
-                    fragment = new SecurityGuide1();
-                }
-                break;
             case 3:
-                if (next) {
-                    titleId = R.string.title_guide4;
-                    fragment = new SecurityGuide4();
-                } else {
-                    titleId = R.string.title_guide2;
-                    fragment = new SecurityGuide2();
-                }
+                titleId = R.string.title_guide3;
+                fragment = new SecurityGuide3();
                 break;
             case 4:
-                if (next) {
-                    titleId = R.string.title_security;
-                    fragment = new SecurityFragment();
-                } else {
-                    titleId = R.string.title_guide3;
-                    fragment = new SecurityGuide3();
-                }
+                titleId = R.string.title_guide4;
+                fragment = new SecurityGuide4();
                 break;
+            case 5:
+                fragment = new SecurityFragment();
         }
         if (fragment != null) {
             toolbar.setTitle(titleId);

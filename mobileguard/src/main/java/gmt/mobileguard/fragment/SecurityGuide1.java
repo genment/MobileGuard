@@ -21,7 +21,7 @@ public class SecurityGuide1 extends Fragment {
         contentView.findViewById(R.id.next_step).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onStepButtonClicked(1, true);
+                mListener.onStepButtonClicked(2);
             }
         });
         return contentView;
@@ -58,10 +58,9 @@ public class SecurityGuide1 extends Fragment {
         /**
          * 当步骤按钮被点击时回调
          *
-         * @param guide_id 当前 Guide 位置
-         * @param next     下一步还是上一步，true 表示 下一步，false 表示 上一步
+         * @param goToGuide 要切换到哪个 Guide
          */
-        public void onStepButtonClicked(int guide_id, boolean next);
+        public void onStepButtonClicked(int goToGuide);
     }
 
 }
