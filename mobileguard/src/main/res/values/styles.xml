@@ -53,5 +53,12 @@
         <item name="android:layout_marginTop">@dimen/common_margin</item>
         <item name="android:layout_marginLeft">@dimen/common_margin</item>
     </style>
+    <!-- 带Star2图标的向导Text-->
+    <style name="Guide_Text.Star2">
+        <item name="android:gravity">center</item>
+        <item name="android:drawableLeft">@android:drawable/btn_star_big_on</item>
+        <item name="android:layout_marginTop">@dimen/common_margin</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 
 </resources>

@@ -29,4 +29,13 @@
     <string name="tip_guide4_2_off">未开启防盗保护</string>
     <string name="tip_guide4_2_on">已开启防盗保护</string>
     <string name="succeed">完成</string>
+    <string name="settings">设置</string>
+    <string name="unsetting">未设置</string>
+    <string name="security_phone">安全号码</string>
+    <string name="security_status">防盗开启状态</string>
+    <string name="security_functions">功能使用</string>
+    <string name="security_location">[GPS追踪] *#location#*</string>
+    <string name="security_alarm">[播放报警音乐] *#alarm#*</string>
+    <string name="security_wipedata">[远程删除数据] *#wipedata#*</string>
+    <string name="security_lockscreen">[远程锁屏] *#lockscreen#*</string>
 </resources>

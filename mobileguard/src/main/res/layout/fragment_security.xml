@@ -1,16 +1,81 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="gmt.mobileguard.fragment.SecurityFragment">
+    android:orientation="vertical"
+    android:padding="@dimen/common_padding"
+    tools:context="gmt.mobileguard.activity.SecurityActivity">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="50sp"
-        android:gravity="center"
-        android:layout_margin="@dimen/common_margin"
-        android:text="这里是真正的防盗界面。" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <TextView
+            style="@style/Guide_Text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/security_phone" />
+
+        <TextView
+            android:id="@+id/phone"
+            style="@style/Guide_Text"
+            android:text="@string/unsetting" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/Guide_Text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/security_status" />
+
+        <ImageView
+            android:id="@+id/security_status"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/lock" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/settings"
+        style="@style/Guide_Text"
+        android:layout_width="match_parent"
+        android:background="@drawable/btn_transparent"
+        android:gravity="start|center_vertical"
+        android:text="@string/settings" />
+
+    <TextView
+        style="@style/Guide_Text"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="@dimen/common_margin"
+        android:background="@color/md_grey_500"
+        android:gravity="center"
+        android:text="@string/security_functions" />
+
+    <TextView
+        style="@style/Guide_Text.Star2"
+        android:text="@string/security_location" />
+
+    <TextView
+        style="@style/Guide_Text.Star2"
+        android:text="@string/security_alarm" />
+
+    <TextView
+        style="@style/Guide_Text.Star2"
+        android:text="@string/security_wipedata" />
+
+    <TextView
+        style="@style/Guide_Text.Star2"
+        android:text="@string/security_lockscreen" />
+
+</LinearLayout>
