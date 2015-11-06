@@ -9,7 +9,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_margin="@dimen/common_margin"
         android:src="@drawable/bind" />
 
@@ -20,25 +19,23 @@
         android:orientation="vertical">
 
         <TextView
-            style="@style/Guide_TextView"
-            android:drawableLeft="@null"
-            android:gravity="center_vertical"
-            android:text="@string/tip_guide2_1" />
+            style="@style/Guide_Text"
+            android:layout_margin="@dimen/common_margin"
+            android:text="@string/tip_guide2_1"
+            android:textSize="18sp" />
 
         <Switch
             android:id="@+id/guide_2_bind_sim"
-            style="@style/Guide_TextView"
+            style="@style/Guide_Text"
             android:layout_width="match_parent"
             android:layout_margin="@dimen/common_margin"
             android:checked="true"
-            android:drawableLeft="@null"
-            android:gravity="start|center_vertical"
             android:text="@string/tip_guide2_2" />
 
         <TextView
             android:id="@+id/guide_2_bind_sim_tips"
-            style="@style/Guide_TextView"
-            android:drawableLeft="@null"
+            style="@style/Guide_Text"
+            android:layout_margin="@dimen/common_margin"
             android:text="@string/tip_guide2_3_on"
             android:textColor="@color/md_grey_500"
             android:textSize="16sp" />

@@ -4,13 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/common_padding"
     tools:context="gmt.mobileguard.activity.SecurityActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_margin="@dimen/common_margin"
         android:src="@drawable/phone" />
 
@@ -22,18 +20,16 @@
 
         <Switch
             android:id="@+id/guide_4_open_security"
-            style="@style/Guide_TextView"
+            style="@style/Guide_Text"
             android:layout_width="match_parent"
             android:layout_margin="@dimen/common_margin"
             android:checked="true"
-            android:drawableLeft="@null"
-            android:gravity="start|center_vertical"
             android:text="@string/tip_guide4_1" />
 
         <TextView
             android:id="@+id/guide_4_open_security_tips"
-            style="@style/Guide_TextView"
-            android:drawableLeft="@null"
+            style="@style/Guide_Text"
+            android:layout_margin="@dimen/common_margin"
             android:text="@string/tip_guide4_2_on"
             android:textColor="@color/md_grey_500"
             android:textSize="16sp" />
@@ -72,7 +68,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/common_padding">
 
         <Button
             android:id="@+id/prev_step"

@@ -9,7 +9,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_margin="@dimen/common_margin"
         android:src="@drawable/setup1" />
 
@@ -20,27 +19,25 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Guide_Text"
             android:layout_margin="@dimen/common_margin"
             android:text="@string/tip_guide1_0"
-            android:textColor="#333"
             android:textSize="18sp" />
 
         <TextView
-            style="@style/Guide_TextView"
+            style="@style/Guide_Text.Star"
             android:text="@string/tip_guide1_1" />
 
         <TextView
-            style="@style/Guide_TextView"
+            style="@style/Guide_Text.Star"
             android:text="@string/tip_guide1_2" />
 
         <TextView
-            style="@style/Guide_TextView"
+            style="@style/Guide_Text.Star"
             android:text="@string/tip_guide1_3" />
 
         <TextView
-            style="@style/Guide_TextView"
+            style="@style/Guide_Text.Star"
             android:text="@string/tip_guide1_4" />
     </LinearLayout>
 

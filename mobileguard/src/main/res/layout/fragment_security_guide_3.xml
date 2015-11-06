@@ -4,13 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/common_padding"
     tools:context="gmt.mobileguard.activity.SecurityActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_margin="@dimen/common_margin"
         android:src="@drawable/phone" />
 
@@ -21,32 +19,27 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Guide_Text"
+            android:layout_margin="@dimen/common_margin"
             android:text="@string/tip_guide3_1"
-            android:textColor="#333"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/guide_3_phone"
+            style="@style/Guide_Text"
+            android:layout_margin="@dimen/common_margin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/common_margin"
-            android:gravity="start|center_vertical"
             android:hint="@string/tip_guide3_2"
-            android:inputType="phone"
-            android:textColor="#333"
-            android:textSize="20sp" />
+            android:inputType="phone" />
 
         <Button
             android:id="@+id/guide_3_select_phone"
+            style="@style/Guide_Text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/common_margin"
+            android:layout_margin="@dimen/common_margin"
             android:background="@drawable/btn_common"
             android:text="@string/tip_guide3_3"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +74,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/common_padding">
 
         <Button
             android:id="@+id/prev_step"
