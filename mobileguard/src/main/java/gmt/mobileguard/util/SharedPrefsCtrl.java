@@ -15,9 +15,9 @@ import gmt.mobileguard.BuildConfig;
  * Created by Genment at 2015/11/7 14:46.
  */
 public class SharedPrefsCtrl {
-    static Context mContext;
-    static SharedPreferences mSharedPreferences;
-    static SharedPreferences.Editor mEditor;
+    private static Context mContext;
+    private static SharedPreferences mSharedPreferences;
+    private static SharedPreferences.Editor mEditor;
 
     /**
      * 私有构造方法，防止实例化
@@ -72,7 +72,7 @@ public class SharedPrefsCtrl {
 
     public static void putStringSet(String key, Set<String> values) {
         check();
-        mEditor.putStringSet(key, values);
+        mEditor.putStringSet(key, values).apply();
     }
 
     // get
