@@ -1,6 +1,5 @@
 package gmt.mobileguard.util;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -26,8 +25,8 @@ public class SharedPrefsCtrl {
     }
 
     public static void init(Context context) {
-        if (!(context instanceof Application)) {
-            throw new IllegalArgumentException("context必须是Application的子类。");
+        if (context == null) {
+            throw new NullPointerException("context is null.");
         }
         if (mContext != null || mSharedPreferences != null || mEditor != null) {
             return;
@@ -73,6 +72,42 @@ public class SharedPrefsCtrl {
     public static void putStringSet(String key, Set<String> values) {
         check();
         mEditor.putStringSet(key, values).apply();
+    }
+
+    /**
+     * 一次性地设置一系列属性
+     *
+     * @param map <code>key</code> String 类型的 key
+     *            <code>value</code> 就是 value，可以是任意 SharedPreferences 支持的类型。
+     */
+    public static void putMap(Map<String, ?> map) {
+        if (map == null || map.size() < 1)
+            return;
+        check();
+        Set<String> keys = map.keySet();
+        Object value;
+        for (String key : keys) {
+            value = map.get(key);
+            if (value == null || value instanceof String) {
+                mEditor.putString(key, (String) value);
+            } else if (value instanceof Boolean) {
+                mEditor.putBoolean(key, (boolean) value);
+            } else if (value instanceof Integer) {
+                mEditor.putInt(key, (int) value);
+            } else if (value instanceof Float) {
+                mEditor.putFloat(key, (float) value);
+            } else if (value instanceof Double) {
+                mEditor.putFloat(key, ((Double) value).floatValue());
+            } else if (value instanceof Long) {
+                mEditor.putLong(key, (long) value);
+            } else if (value instanceof Set) {
+                //noinspection unchecked
+                mEditor.putStringSet(key, (Set<String>) value);
+            } else {
+                mEditor.putString(key, value.toString());
+            }
+        }
+        mEditor.apply();
     }
 
     // get
