@@ -2,6 +2,8 @@ package gmt.mobileguard;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 /**
  * Project: StudyDemo
  * Package: gmt.mobileguard
@@ -10,6 +12,6 @@ import android.app.Application;
 public class App extends Application {
     @Override
     public void onCreate() {
-        super.onCreate();
+        LeakCanary.install(this);
     }
 }
