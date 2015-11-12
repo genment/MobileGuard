@@ -11,6 +11,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import gmt.mobileguard.R;
+import gmt.mobileguard.util.EncryptUtil;
+import gmt.mobileguard.util.DeviceInfo;
+import gmt.mobileguard.util.SharedPrefsCtrl;
 
 public class SecurityGuide2 extends Fragment implements View.OnClickListener {
     // 表示是否已经绑定 SIM 卡的 key
@@ -19,7 +22,10 @@ public class SecurityGuide2 extends Fragment implements View.OnClickListener {
     // 表示是否已经绑定 SIM 卡的 value
     private boolean mIsBinded = true;
 
+    private String mSimInfo = null;
+
     private OnStepButtonClickedListener mListener;
+    private TextView bind_sim_tips;
 
     /**
      * Use this factory method to create a new instance of
@@ -43,6 +49,13 @@ public class SecurityGuide2 extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 获取是否绑定SIM卡
+        mIsBinded = SharedPrefsCtrl.getBoolean(SharedPrefsCtrl.Constant.SJFD_BIND_SIM, true);
+        // 获取SIM卡信息，并加密处理
+        mSimInfo = EncryptUtil.md5(DeviceInfo.getIMSI(getActivity()));
+
+        // TODO: 2015/11/11 暂时没用，以后再说。
         if (getArguments() != null) {
             mIsBinded = getArguments().getBoolean(ARG_IS_BINDED, true);
         }
@@ -56,17 +69,14 @@ public class SecurityGuide2 extends Fragment implements View.OnClickListener {
         contentView.findViewById(R.id.prev_step).setOnClickListener(this);
         contentView.findViewById(R.id.next_step).setOnClickListener(this);
 
-        final TextView bind_sim_tips = (TextView) contentView.findViewById(R.id.guide_2_bind_sim_tips);
-        Switch swich = ((Switch) contentView.findViewById(R.id.guide_2_bind_sim));
-        swich.setChecked(mIsBinded);
-        swich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bind_sim_tips = (TextView) contentView.findViewById(R.id.guide_2_bind_sim_tips);
+        updateStatus(mIsBinded);
+        Switch _switch = ((Switch) contentView.findViewById(R.id.guide_2_bind_sim));
+        _switch.setChecked(mIsBinded);
+        _switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    bind_sim_tips.setText(R.string.tip_guide2_3_on);
-                } else {
-                    bind_sim_tips.setText(R.string.tip_guide2_3_off);
-                }
+                updateStatus(isChecked);
             }
         });
         return contentView;
@@ -98,6 +108,20 @@ public class SecurityGuide2 extends Fragment implements View.OnClickListener {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void updateStatus(boolean status) {
+        // 保存状态
+        SharedPrefsCtrl.putBoolean(SharedPrefsCtrl.Constant.SJFD_BIND_SIM, status);
+        if (status) {
+            // 添加Sim卡
+            SharedPrefsCtrl.putString(SharedPrefsCtrl.Constant.SJFD_SIM, mSimInfo);
+            bind_sim_tips.setText(R.string.tip_guide2_3_on);
+        } else {
+            // 删除Sim卡
+            SharedPrefsCtrl.remove(SharedPrefsCtrl.Constant.SJFD_SIM);
+            bind_sim_tips.setText(R.string.tip_guide2_3_off);
+        }
     }
 
     /**
