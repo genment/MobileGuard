@@ -2,7 +2,6 @@ package gmt.mobileguard.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +20,7 @@ import android.widget.Toast;
 import gmt.mobileguard.R;
 import gmt.mobileguard.sevice.UpdateService;
 import gmt.mobileguard.util.EncryptUtil;
+import gmt.mobileguard.util.SharedPrefsCtrl;
 
 public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
@@ -113,8 +113,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
      * <a href="http://stackoverflow.com/questions/2620444/how-to-prevent-a-dialog-from-closing-when-a-button-is-clicked">How to prevent a dialog from closing when a button is clicked</a>
      */
     private void showDialog() {
-        final SharedPreferences sharedPref = getSharedPreferences(getPackageName(), MODE_PRIVATE);
-        final boolean configed = sharedPref.getBoolean("sjfd_config", false);
+        final boolean configed = SharedPrefsCtrl.getBoolean(SharedPrefsCtrl.Constant.SJFD_CONFIG, false);
         View dialogView;
         final EditText pwd2;
         if (configed) {
@@ -140,18 +139,16 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 // 已设置
                 if (configed) {
                     if (!checkPassword(EncryptUtil.md5(pwd1.getText().toString()),
-                            sharedPref.getString("sjfd_pwd", null))) {
+                            SharedPrefsCtrl.getString(SharedPrefsCtrl.Constant.SJFD_PWD, null))) {
                         Toast.makeText(HomeActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
                 // 未设置
                 else {
-                    if (checkPassword(pwd1.getText().toString(), pwd2.getText().toString()) &&
-                            sharedPref.edit()
-                                    .putString("sjfd_pwd", EncryptUtil.md5(pwd1.getText().toString()))
-                                    .putBoolean("sjfd_config", true)
-                                    .commit()) {
+                    if (checkPassword(pwd1.getText().toString(), pwd2.getText().toString())) {
+                        SharedPrefsCtrl.putString(SharedPrefsCtrl.Constant.SJFD_PWD, EncryptUtil.md5(pwd1.getText().toString()));
+                        SharedPrefsCtrl.putBoolean(SharedPrefsCtrl.Constant.SJFD_CONFIG, true);
                         Toast.makeText(HomeActivity.this, "设置密码成功！", Toast.LENGTH_SHORT).show();
                     } else {
                         pwd2.setError("密码不一致");

@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
 
+import gmt.mobileguard.util.SharedPrefsCtrl;
+
 /**
  * Project: StudyDemo
  * Package: gmt.mobileguard
@@ -12,6 +14,7 @@ import com.squareup.leakcanary.LeakCanary;
 public class App extends Application {
     @Override
     public void onCreate() {
+        SharedPrefsCtrl.init(this);
         LeakCanary.install(this);
     }
 }
