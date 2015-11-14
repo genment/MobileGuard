@@ -11,6 +11,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import gmt.mobileguard.R;
+import gmt.mobileguard.util.SharedPrefsCtrl;
 
 public class SecurityGuide4 extends Fragment implements View.OnClickListener {
     // 表示是否已经开启防盗的 key
@@ -20,6 +21,7 @@ public class SecurityGuide4 extends Fragment implements View.OnClickListener {
     private boolean mIsOpened = true;
 
     private OnStepButtonClickedListener mListener;
+    private TextView open_security_tips;
 
     /**
      * Use this factory method to create a new instance of
@@ -43,6 +45,11 @@ public class SecurityGuide4 extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 获取是否开启防盗
+        mIsOpened = SharedPrefsCtrl.getBoolean(SharedPrefsCtrl.Constant.SJFD_SECURITY_STATUS, true);
+
+        // TODO: 2015/11/14 暂时没用，以后再说。
         if (getArguments() != null) {
             mIsOpened = getArguments().getBoolean(ARG_IS_OPENED, true);
         }
@@ -56,17 +63,14 @@ public class SecurityGuide4 extends Fragment implements View.OnClickListener {
         contentView.findViewById(R.id.prev_step).setOnClickListener(this);
         contentView.findViewById(R.id.next_step).setOnClickListener(this);
 
-        final TextView open_security_tips = (TextView) contentView.findViewById(R.id.guide_4_open_security_tips);
-        Switch swich = ((Switch) contentView.findViewById(R.id.guide_4_open_security));
-        swich.setChecked(mIsOpened);
-        swich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        open_security_tips = (TextView) contentView.findViewById(R.id.guide_4_open_security_tips);
+        updateStatus(mIsOpened);
+        Switch _switch = ((Switch) contentView.findViewById(R.id.guide_4_open_security));
+        _switch.setChecked(mIsOpened);
+        _switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    open_security_tips.setText(R.string.tip_guide4_2_on);
-                } else {
-                    open_security_tips.setText(R.string.tip_guide4_2_off);
-                }
+                updateStatus(isChecked);
             }
         });
         return contentView;
@@ -98,6 +102,16 @@ public class SecurityGuide4 extends Fragment implements View.OnClickListener {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void updateStatus(boolean status) {
+        // 保存状态
+        SharedPrefsCtrl.putBoolean(SharedPrefsCtrl.Constant.SJFD_SECURITY_STATUS, status);
+        if (status) {
+            open_security_tips.setText(R.string.tip_guide4_2_on);
+        } else {
+            open_security_tips.setText(R.string.tip_guide4_2_off);
+        }
     }
 
     /**
