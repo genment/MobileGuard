@@ -16,7 +16,8 @@ public class SecurityActivity extends AppCompatActivity implements
         SecurityGuide1.OnStepButtonClickedListener,
         SecurityGuide2.OnStepButtonClickedListener,
         SecurityGuide3.OnStepButtonClickedListener,
-        SecurityGuide4.OnStepButtonClickedListener {
+        SecurityGuide4.OnStepButtonClickedListener,
+        SecurityFragment.OnStepButtonClickedListener {
 
     private Toolbar toolbar;
 
