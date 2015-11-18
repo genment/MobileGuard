@@ -38,4 +38,7 @@
     <string name="security_alarm">[播放报警音乐] *#alarm#*</string>
     <string name="security_wipedata">[远程删除数据] *#wipedata#*</string>
     <string name="security_lockscreen">[远程锁屏] *#lockscreen#*</string>
+
+    <!-- Manifest strings: 设备管理器(MyDeviceAdminReceiver) -->
+    <string name="device_admin_description">必须将手机卫士激活为系统的设备管理器，才可以使用手机防盗的功能。</string>
 </resources>
