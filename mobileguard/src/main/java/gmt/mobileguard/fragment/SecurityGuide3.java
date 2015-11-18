@@ -26,7 +26,7 @@ public class SecurityGuide3 extends Fragment implements View.OnClickListener {
     private String mPhoneNumber;
 
     private OnStepButtonClickedListener mListener;
-    private final int REQUEST_CODE_CONTACT = 1;
+    private static final int REQUEST_CODE_CONTACT = 1;
 
     private TextView phone;
 

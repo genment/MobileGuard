@@ -2,15 +2,19 @@ package gmt.mobileguard.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import gmt.mobileguard.R;
+import gmt.mobileguard.util.SecurityUtil;
 import gmt.mobileguard.util.SharedPrefsCtrl;
 
 public class SecurityGuide4 extends Fragment implements View.OnClickListener {
@@ -47,7 +51,7 @@ public class SecurityGuide4 extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         // 获取是否开启防盗
-        mIsOpened = SharedPrefsCtrl.getBoolean(SharedPrefsCtrl.Constant.SJFD_SECURITY_STATUS, true);
+        mIsOpened = SharedPrefsCtrl.getBoolean(SharedPrefsCtrl.Constant.SJFD_SECURITY_STATUS, false);
 
         // TODO: 2015/11/14 暂时没用，以后再说。
         if (getArguments() != null) {
@@ -70,6 +74,21 @@ public class SecurityGuide4 extends Fragment implements View.OnClickListener {
         _switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("提醒")
+                            .setMessage(R.string.device_admin_introduction)
+                            .setPositiveButton("马上激活", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (SecurityUtil.checkActiveAdmin(getActivity())) {
+                                        Toast.makeText(getActivity(), "已经激活成功！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
                 updateStatus(isChecked);
             }
         });

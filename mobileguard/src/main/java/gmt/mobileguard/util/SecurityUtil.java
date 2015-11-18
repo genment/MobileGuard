@@ -14,6 +14,7 @@ import android.text.TextUtils;
 
 import java.io.IOException;
 
+import gmt.mobileguard.R;
 import gmt.mobileguard.sevice.LocationService;
 
 /**
@@ -145,6 +146,27 @@ public class SecurityUtil {
         if (dpm.isAdminActive(deviceAdmin)) {
             dpm.wipeData(DevicePolicyManager.WIPE_EXTERNAL_STORAGE);
         }
+    }
+
+    public static boolean checkActiveAdmin(Context context) {
+        DevicePolicyManager dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName deviceAdmin = new ComponentName(context, MyDeviceAdminReceiver.class);
+        boolean adminActive = dpm.isAdminActive(deviceAdmin);
+        if (!adminActive) {
+            // Launch the activity to have the user enable our admin.
+            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, deviceAdmin);
+            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                    context.getString(R.string.device_admin_introduction));
+            context.startActivity(intent);
+        }
+        return adminActive;
+    }
+
+    public static void removeAdmin(Context context) {
+        DevicePolicyManager dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName deviceAdmin = new ComponentName(context, MyDeviceAdminReceiver.class);
+        dpm.removeActiveAdmin(deviceAdmin);
     }
 
     /**
