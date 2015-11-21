@@ -10,6 +10,7 @@
     <string name="title_guide2">手机防盗 - 绑定SIM卡</string>
     <string name="title_guide3">手机防盗 - 设置安全号码</string>
     <string name="title_guide4">手机防盗 - 开启防盗保护</string>
+    <string name="title_blacklist">黑名单</string>
     <string name="prev_step">上一步</string>
     <string name="next_step">下一步</string>
     <string name="tip_guide1_0">开启后将可用以下功能：</string>
@@ -38,6 +39,10 @@
     <string name="security_alarm">[播放报警音乐] *#alarm#*</string>
     <string name="security_wipedata">[远程删除数据] *#wipedata#*</string>
     <string name="security_lockscreen">[远程锁屏] *#lockscreen#*</string>
+    <string name="phone">电话</string>
+    <string name="message">短信</string>
+    <string name="stranger">陌生人</string>
+    <string name="black_count">(%s)</string>
 
     <!-- Manifest strings: 设备管理器(MyDeviceAdminReceiver) -->
     <string name="device_admin_description">必须将手机卫士激活为系统的设备管理器，才可以使用手机防盗的功能。</string>

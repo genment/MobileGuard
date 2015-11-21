@@ -30,13 +30,13 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private Class[] item_class = {
             // TODO: 2015/9/21 定义各个功能的 Activity.class
-            SecurityActivity.class, null, null,
+            SecurityActivity.class, BlacklistActivity.class, null,
             null, null, null,
             null, null, null
     };
 
     private String[] item_text = {
-            "手机防盗", "通信卫士", "软件管理",
+            "手机防盗", "通讯管理", "软件管理",
             "进程管理", "流量统计", "手机杀毒",
             "缓存清理", "高级工具", "设置中心"
     };

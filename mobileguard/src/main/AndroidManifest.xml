@@ -39,6 +39,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.HomeActivity" />
         </activity>
+        <activity
+            android:name=".activity.BlacklistActivity"
+            android:label="@string/title_blacklist"
+            android:parentActivityName=".activity.HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.HomeActivity" />
+        </activity>
 
         <service android:name=".sevice.UpdateService" />
         <service android:name=".sevice.LocationService" />
@@ -72,6 +80,7 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>
