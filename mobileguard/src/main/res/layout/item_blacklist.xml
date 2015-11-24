@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,12 +30,11 @@
             android:layout_marginRight="1dp"
             android:layout_toEndOf="@id/black_number"
             android:layout_toRightOf="@id/black_number"
-            android:text="@string/black_count"
             android:textColor="@color/md_deep_orange_700"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/black_name"
+            android:id="@+id/black_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -50,9 +48,9 @@
             android:id="@+id/black_attribution"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/black_name"
-            android:layout_toEndOf="@+id/black_name"
-            android:layout_toRightOf="@+id/black_name"
+            android:layout_alignBaseline="@id/black_description"
+            android:layout_toEndOf="@+id/black_description"
+            android:layout_toRightOf="@+id/black_description"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
 
@@ -60,17 +58,14 @@
         android:id="@+id/black_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="true"
         android:text="@string/phone"
-        android:textColor="@color/md_grey_800"
-        app:buttonTint="@color/md_deep_orange_400" />
+        android:textColor="@color/md_grey_800" />
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/block_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/message"
-        android:textColor="@color/md_grey_800"
-        app:buttonTint="@color/md_deep_orange_400" />
+        android:textColor="@color/md_grey_800" />
 
 </LinearLayout>

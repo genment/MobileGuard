@@ -24,7 +24,7 @@ public class BlacklistDbOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // blacklist table
-        db.execSQL("CREATE TABLE blacklist (_id integer primary key autoincrement, number varchar(20), mode int, name varchar(20), count int, attribution varchar(20) );");
+        db.execSQL("CREATE TABLE blacklist (_id integer primary key autoincrement, number varchar(20), mode int, description varchar(20), count int, attribution varchar(20) );");
     }
 
     @Override

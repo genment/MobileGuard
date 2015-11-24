@@ -9,7 +9,7 @@ public class BlackEntity {
     private int _id;
     private String number;
     private int mode;
-    private String name;
+    private String description;
     private String attribution;
     private int count;
 
@@ -67,12 +67,12 @@ public class BlackEntity {
         this.mode = mode;
     }
 
-    public String getName() {
-        return name == null ? "" : name;
+    public String getDescription() {
+        return description == null ? "" : description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getNumber() {

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 import gmt.mobileguard.R;
-import gmt.mobileguard.util.entity.BlackEntity;
+import gmt.mobileguard.storage.db.entity.BlackEntity;
 
 public class BlacklistActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -70,7 +70,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
             BlackEntity blackEntity = new BlackEntity();
             blackEntity.setNumber("138" + random.nextInt());
             blackEntity.setCount(random.nextInt() % 20 + 1);
-            blackEntity.setName("黄飞鸿");
+            blackEntity.setDescription("黄飞鸿");
             blackEntity.setAttribution("广东佛山");
             blackEntity.setMode(i % 4);
             datas.add(blackEntity);
@@ -89,7 +89,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         BlackEntity blackEntity = new BlackEntity();
         blackEntity.setNumber("138" + random.nextInt());
         blackEntity.setCount(random.nextInt() % 10 + 1);
-        blackEntity.setName("黄飞鸿");
+        blackEntity.setDescription("黄飞鸿");
         blackEntity.setAttribution("广东佛山");
         blackEntity.setMode(random.nextInt() % 3);
         ((RecyclerViewAdapter) mBlacklist.getAdapter()).addData(blackEntity);
@@ -114,7 +114,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         public void onBindViewHolder(ViewHolder holder, int position) {
             BlackEntity black = mDatas.get(position);
             holder.blackNumber.setText(black.getNumber());
-            holder.blackName.setText(black.getName());
+            holder.blackDdescription.setText(black.getDescription());
             holder.blackAttribution.setText(black.getAttribution());
             holder.blackPhone.setChecked(black.getBlackPhone());
             holder.blackMessage.setChecked(black.getBlackMessage());
@@ -151,7 +151,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
 
             private TextView blackNumber;
             private TextView blackCount;
-            private TextView blackName;
+            private TextView blackDdescription;
             private TextView blackAttribution;
             private CheckBox blackPhone;
             private CheckBox blackMessage;
@@ -160,7 +160,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
                 super(itemView);
                 blackNumber = (TextView) itemView.findViewById(R.id.black_number);
                 blackCount = (TextView) itemView.findViewById(R.id.black_count);
-                blackName = (TextView) itemView.findViewById(R.id.black_name);
+                blackDdescription = (TextView) itemView.findViewById(R.id.black_description);
                 blackAttribution = (TextView) itemView.findViewById(R.id.black_attribution);
                 blackPhone = (CheckBox) itemView.findViewById(R.id.black_phone);
                 blackMessage = (CheckBox) itemView.findViewById(R.id.block_message);

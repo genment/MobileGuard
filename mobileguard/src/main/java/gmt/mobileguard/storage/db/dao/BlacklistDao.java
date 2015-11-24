@@ -37,11 +37,11 @@ public class BlacklistDao {
      */
     public void addBlack(BlackEntity blackEntity) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
-        db.execSQL("INSERT INTO blacklist(number, mode, name, count, attribution) VALUES( ?, ?, ?, 0, ?)",
+        db.execSQL("INSERT INTO blacklist(number, mode, description, count, attribution) VALUES( ?, ?, ?, 0, ?)",
                 new Object[]{
                         blackEntity.getNumber(),
                         blackEntity.getMode(),
-                        blackEntity.getName(),
+                        blackEntity.getDescription(),
                         blackEntity.getAttribution()
                 });
         db.close();
@@ -52,11 +52,11 @@ public class BlacklistDao {
      */
     public void updateBlack(BlackEntity blackEntity) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
-        db.execSQL("UPDATE blacklist SET number=?, mode=?, name=?, attribution=? WHERE _id = ?",
+        db.execSQL("UPDATE blacklist SET number=?, mode=?, description=?, attribution=? WHERE _id = ?",
                 new Object[]{
                         blackEntity.getNumber(),
                         blackEntity.getMode(),
-                        blackEntity.getName(),
+                        blackEntity.getDescription(),
                         blackEntity.getAttribution(),
                         blackEntity.getId()
                 });
@@ -116,7 +116,7 @@ public class BlacklistDao {
                 blackEntity.setId(cursor.getInt(0));
                 blackEntity.setNumber(cursor.getString(1));
                 blackEntity.setMode(cursor.getInt(2));
-                blackEntity.setName(cursor.getString(3));
+                blackEntity.setDescription(cursor.getString(3));
                 blackEntity.setCount(cursor.getInt(4));
                 blackEntity.setAttribution(cursor.getString(5));
                 datas.add(blackEntity);
