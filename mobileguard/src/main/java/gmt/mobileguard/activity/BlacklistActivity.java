@@ -1,10 +1,13 @@
 package gmt.mobileguard.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,7 +79,16 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
      */
     @Override
     public void onClick(View v) {
-        // TODO: 2015/11/25 添加黑名单
+        new AlertDialog.Builder(this)
+                .setTitle("添加方式")
+                .setItems(R.array.black_add_modes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(BlacklistActivity.this, EditBlackActivity.class));
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
     /**
