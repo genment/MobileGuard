@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,23 +15,28 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import gmt.mobileguard.R;
+import gmt.mobileguard.storage.db.dao.BlacklistDao;
 import gmt.mobileguard.storage.db.entity.BlackEntity;
 
 public class BlacklistActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // UI
     private Toolbar mToolbar;
     private FloatingActionButton mFab;
     private RecyclerView mBlacklist;
+
+    // DB
+    private BlacklistDao mBlacklistDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blacklist);
+
+        mBlacklistDao = new BlacklistDao(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -42,12 +46,14 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
 
         mBlacklist = (RecyclerView) findViewById(R.id.blacklist);
         mBlacklist.setHasFixedSize(true);
-        mBlacklist.setAdapter(new RecyclerViewAdapter());
+        mBlacklist.setAdapter(new RecyclerViewAdapter(mBlacklistDao.getAll()));
         mBlacklist.setLayoutManager(new LinearLayoutManager(this));
         mBlacklist.addItemDecoration(new RecyclerViewItemDecoration());
         mBlacklist.setOnScrollListener(new RecyclerView.OnScrollListener() {
             // Fab的显示状态，防止重复调用
             boolean show = true;
+
+            // TODO: 2015/11/23  BUG：想办法把FAB显示出来，在隐藏FAB后，删除item到小于一屏时，FAB一直不显示
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 // dx < 0: 向左, dx > 0: 向右
@@ -63,21 +69,6 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
-    private List<BlackEntity> getData() {
-        Random random = new Random();
-        List<BlackEntity> datas = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            BlackEntity blackEntity = new BlackEntity();
-            blackEntity.setNumber("138" + random.nextInt());
-            blackEntity.setCount(random.nextInt() % 20 + 1);
-            blackEntity.setDescription("黄飞鸿");
-            blackEntity.setAttribution("广东佛山");
-            blackEntity.setMode(i % 4);
-            datas.add(blackEntity);
-        }
-        return datas;
-    }
-
     /**
      * Fab click
      *
@@ -85,14 +76,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
      */
     @Override
     public void onClick(View v) {
-        Random random = new Random();
-        BlackEntity blackEntity = new BlackEntity();
-        blackEntity.setNumber("138" + random.nextInt());
-        blackEntity.setCount(random.nextInt() % 10 + 1);
-        blackEntity.setDescription("黄飞鸿");
-        blackEntity.setAttribution("广东佛山");
-        blackEntity.setMode(random.nextInt() % 3);
-        ((RecyclerViewAdapter) mBlacklist.getAdapter()).addData(blackEntity);
+        // TODO: 2015/11/25 添加黑名单
     }
 
     /**
@@ -100,7 +84,11 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
      */
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-        private List<BlackEntity> mDatas = getData();
+        private List<BlackEntity> mDatas;
+
+        public RecyclerViewAdapter(List<BlackEntity> datas) {
+            this.mDatas = datas;
+        }
 
         // 调用一屏
         @Override
@@ -133,21 +121,33 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
             return mDatas.size();
         }
 
-        public void addData(BlackEntity data) {
-            int position = mDatas.size();
-            mDatas.add(data);
-            notifyItemInserted(position);
+        public void addData(BlackEntity blackEntity) {
+            mDatas.add(0, blackEntity);
+            notifyItemInserted(0);
+            mBlacklist.scrollToPosition(0);
+            mBlacklistDao.addBlack(blackEntity);
         }
 
         public void removeData(int position) {
             mDatas.remove(position);
             notifyItemRemoved(position);
+            mBlacklistDao.removeBlack(mDatas.get(position));
+        }
+
+        public void updateData(int position, BlackEntity blackEntity) {
+            mDatas.set(position, blackEntity);
+            notifyItemChanged(position);
+            mBlacklistDao.updateBlack(blackEntity);
+        }
+
+        public void changeMode(int position) {
+            mBlacklistDao.changeMode(mDatas.get(position));
         }
 
         /**
          * ViewHolder
          */
-        class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             private TextView blackNumber;
             private TextView blackCount;
@@ -165,13 +165,32 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
                 blackPhone = (CheckBox) itemView.findViewById(R.id.black_phone);
                 blackMessage = (CheckBox) itemView.findViewById(R.id.block_message);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        removeData(getLayoutPosition());
-                        Snackbar.make(v, "你删除了一个", Snackbar.LENGTH_SHORT).setAction("再来一个", BlacklistActivity.this).show();
+                itemView.setOnClickListener(this);
+
+                blackPhone.setOnClickListener(this);
+                blackMessage.setOnClickListener(this);
+            }
+
+            /**
+             * 修改mode时，不用 #OnCheckedChangeListener，因为滚动屏幕时，是通过setChecked()进行设置的，
+             * 而setChecked()内部会回调onCheckedChanged()，导致滚动列表时，不停地调用 changeMode(int) 操作数据库
+             */
+            @Override
+            public void onClick(View view) {
+                int position = getAdapterPosition();
+                if (view instanceof CheckBox) {
+                    BlackEntity blackEntity = mDatas.get(position);
+                    boolean isChecked = ((CheckBox) view).isChecked();
+                    switch (view.getId()) {
+                        case R.id.black_phone:
+                            blackEntity.setBlackPhone(isChecked);
+                            break;
+                        case R.id.block_message:
+                            blackEntity.setBlackMessage(isChecked);
+                            break;
                     }
-                });
+                    changeMode(position);
+                }
             }
         }
     }
@@ -242,5 +261,11 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
 
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBlacklistDao.close();
     }
 }
