@@ -1,6 +1,7 @@
 package gmt.mobileguard.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,10 @@ import gmt.mobileguard.storage.db.entity.BlackEntity;
 public class EditBlackActivity extends AppCompatActivity {
 
     private static final String EXTRA_KEY = "blacklist";
+    private static final int REQUEST_CODE_RECORD = 0;
+    private static final int REQUEST_CODE_MESSAGE = 1;
+    private static final int REQUEST_CODE_CONTACT = 2;
+    private static final int REQUEST_CODE_INPUT = 3;
 
     private BlackEntity mBlackEntity = null;
     private BlacklistDao mBlacklistDao = null;
@@ -87,6 +92,18 @@ public class EditBlackActivity extends AppCompatActivity {
             mAttribution.setText(mBlackEntity.getAttribution());
             mMode.check(setBlackMode(mBlackEntity.getMode()));
             mDescription.setText(mBlackEntity.getDescription());
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle("添加方式")
+                    .setItems(R.array.add_black_from, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which != REQUEST_CODE_INPUT) { // which == 3 是手动
+                                startSelectionActivity(which);
+                            }
+                        }
+                    })
+                    .show();
         }
     }
 
@@ -98,10 +115,21 @@ public class EditBlackActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.black_save) {
-            saveBlackItem();
+        switch (item.getItemId()) {
+            case R.id.add_black_record:
+                startSelectionActivity(REQUEST_CODE_RECORD);
+                break;
+            case R.id.add_black_message:
+                startSelectionActivity(REQUEST_CODE_MESSAGE);
+                break;
+            case R.id.add_black_contact:
+                startSelectionActivity(REQUEST_CODE_CONTACT);
+                break;
+            case R.id.black_save:
+                saveBlackItem(); // no break; should be finish().
+            default:
+                finish();
         }
-        finish();
         return super.onOptionsItemSelected(item);
     }
 
@@ -184,5 +212,27 @@ public class EditBlackActivity extends AppCompatActivity {
                     }).create();
         }
         mDescriptionsSelectionDialog.show();
+    }
+
+    /**
+     * 开启 NumberSelectionActivity 获取电话号码
+     *
+     * @param which 获取方式。
+     */
+    private void startSelectionActivity(int which) {
+        // TODO: 2015/11/26 开启对应的 Activity
+        switch (which) {
+            case REQUEST_CODE_RECORD:
+                break;
+            case REQUEST_CODE_MESSAGE:
+                break;
+            case REQUEST_CODE_CONTACT:
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO: 2015/11/26 处理返回数据
     }
 }

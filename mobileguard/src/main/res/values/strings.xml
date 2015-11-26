@@ -49,10 +49,13 @@
     <string name="tip_input_number">输入黑名单号码</string>
     <string name="description">备注</string>
     <string name="save">保存</string>
-    <string-array name="black_add_modes">
-        <item>从联系人选择</item>
+    <string name="add_black_from_record">从通话记录选择</string>
+    <string name="add_black_from_message">从短信选择</string>
+    <string name="add_black_from_contact">从联系人选择</string>
+    <string-array name="add_black_from">
         <item>从通话记录选择</item>
         <item>从短信选择</item>
+        <item>从联系人选择</item>
         <item>手动输入</item>
     </string-array>
     <string-array name="black_descriptions">

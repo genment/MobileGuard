@@ -8,4 +8,15 @@
         android:icon="@drawable/ic_done_white_24dp"
         android:title="@string/save"
         app:showAsAction="ifRoom" />
+    <group>
+        <item
+            android:id="@+id/add_black_record"
+            android:title="@string/add_black_from_record" />
+        <item
+            android:id="@+id/add_black_message"
+            android:title="@string/add_black_from_message" />
+        <item
+            android:id="@+id/add_black_contact"
+            android:title="@string/add_black_from_contact" />
+    </group>
 </menu>

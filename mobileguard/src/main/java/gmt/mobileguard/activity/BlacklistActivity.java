@@ -79,16 +79,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
      */
     @Override
     public void onClick(View v) {
-        new AlertDialog.Builder(this)
-                .setTitle("添加方式")
-                .setItems(R.array.black_add_modes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(BlacklistActivity.this, EditBlackActivity.class));
-                    }
-                })
-                .setNegativeButton("取消", null)
-                .show();
+        startActivity(new Intent(BlacklistActivity.this, EditBlackActivity.class));
     }
 
     /**
