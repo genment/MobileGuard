@@ -1,13 +1,11 @@
 package gmt.mobileguard.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -83,6 +81,16 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
+     * 添加黑名单后，返回到当前列表时，刷新列表数据
+     */
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        RecyclerViewAdapter adapter = (RecyclerViewAdapter) mBlacklist.getAdapter();
+        adapter.updateLastOneData();
+    }
+
+    /**
      * Adapter
      */
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -124,11 +132,13 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
             return mDatas.size();
         }
 
-        public void addData(BlackEntity blackEntity) {
-            mDatas.add(0, blackEntity);
-            notifyItemInserted(0);
-            mBlacklist.scrollToPosition(0);
-            mBlacklistDao.addBlack(blackEntity);
+        public void updateLastOneData() {
+            BlackEntity blackEntity = mBlacklistDao.getLastOne();
+            if (blackEntity.getId() != mDatas.get(0).getId()) {
+                mDatas.add(0, blackEntity);
+                notifyItemInserted(0);
+                mBlacklist.scrollToPosition(0);
+            }
         }
 
         public void removeData(int position) {
@@ -137,10 +147,15 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
             mBlacklistDao.removeBlack(mDatas.get(position));
         }
 
-        public void updateData(int position, BlackEntity blackEntity) {
+        public void changeData(int position, BlackEntity blackEntity) {
             mDatas.set(position, blackEntity);
             notifyItemChanged(position);
             mBlacklistDao.updateBlack(blackEntity);
+        }
+
+        public void updateAllDatas() {
+            mDatas = mBlacklistDao.getAll();
+            notifyItemRangeChanged(0, mDatas.size());
         }
 
         public void changeMode(int position) {

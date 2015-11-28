@@ -103,6 +103,27 @@ public class BlacklistDao {
     }
 
     /**
+     * 获取最新的一个黑名单
+     */
+    public BlackEntity getLastOne() {
+        SQLiteDatabase db = mHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM blacklist order by _id DESC limit 1", null);
+        BlackEntity blackEntity = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            blackEntity = new BlackEntity();
+            blackEntity.setId(cursor.getInt(0));
+            blackEntity.setNumber(cursor.getString(1));
+            blackEntity.setMode(cursor.getInt(2));
+            blackEntity.setDescription(cursor.getString(3));
+            blackEntity.setCount(cursor.getInt(4));
+            blackEntity.setAttribution(cursor.getString(5));
+            cursor.close();
+        }
+        db.close();
+        return blackEntity;
+    }
+
+    /**
      * 获取全部黑名单
      */
     public List<BlackEntity> getAll() {
