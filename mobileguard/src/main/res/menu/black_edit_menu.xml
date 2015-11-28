@@ -10,11 +10,11 @@
         app:showAsAction="ifRoom" />
     <group>
         <item
-            android:id="@+id/add_black_record"
-            android:title="@string/add_black_from_record" />
+            android:id="@+id/add_black_call_log"
+            android:title="@string/add_black_from_call_log" />
         <item
-            android:id="@+id/add_black_message"
-            android:title="@string/add_black_from_message" />
+            android:id="@+id/add_black_sms"
+            android:title="@string/add_black_from_sms" />
         <item
             android:id="@+id/add_black_contact"
             android:title="@string/add_black_from_contact" />

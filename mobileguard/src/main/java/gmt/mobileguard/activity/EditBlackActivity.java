@@ -21,8 +21,8 @@ import gmt.mobileguard.storage.db.entity.BlackEntity;
 public class EditBlackActivity extends AppCompatActivity {
 
     private static final String EXTRA_KEY = "blacklist";
-    private static final int REQUEST_CODE_RECORD = 0;
-    private static final int REQUEST_CODE_MESSAGE = 1;
+    private static final int REQUEST_CODE_CALL_LOG = 0;
+    private static final int REQUEST_CODE_SMS = 1;
     private static final int REQUEST_CODE_CONTACT = 2;
     private static final int REQUEST_CODE_INPUT = 3;
 
@@ -116,11 +116,11 @@ public class EditBlackActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_black_record:
-                startSelectionActivity(REQUEST_CODE_RECORD);
+            case R.id.add_black_call_log:
+                startSelectionActivity(REQUEST_CODE_CALL_LOG);
                 break;
-            case R.id.add_black_message:
-                startSelectionActivity(REQUEST_CODE_MESSAGE);
+            case R.id.add_black_sms:
+                startSelectionActivity(REQUEST_CODE_SMS);
                 break;
             case R.id.add_black_contact:
                 startSelectionActivity(REQUEST_CODE_CONTACT);
@@ -220,19 +220,30 @@ public class EditBlackActivity extends AppCompatActivity {
      * @param which 获取方式。
      */
     private void startSelectionActivity(int which) {
-        // TODO: 2015/11/26 开启对应的 Activity
+        Intent intent = new Intent();
         switch (which) {
-            case REQUEST_CODE_RECORD:
+            case REQUEST_CODE_CALL_LOG:
+                intent.setAction(NumberSelectionActivity.ActionIntents.ACITON_PICK_CALL_LOG);
                 break;
-            case REQUEST_CODE_MESSAGE:
+            case REQUEST_CODE_SMS:
+                intent.setAction(NumberSelectionActivity.ActionIntents.ACITON_PICK_SMS);
                 break;
             case REQUEST_CODE_CONTACT:
+                intent.setAction(NumberSelectionActivity.ActionIntents.ACITON_PICK_CONTACT);
                 break;
         }
+        startActivityForResult(intent, which);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO: 2015/11/26 处理返回数据
+        if (resultCode == RESULT_OK) {
+            mNumber.setText(data.getStringExtra("number"));
+
+            String name = data.getStringExtra("name");
+            if (!TextUtils.isEmpty(name)) {
+                mDescription.setText(name);
+            }
+        }
     }
 }

@@ -2,20 +2,15 @@ package gmt.mobileguard.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import gmt.mobileguard.BuildConfig;
 import gmt.mobileguard.R;
+import gmt.mobileguard.activity.NumberSelectionActivity;
 import gmt.mobileguard.util.SharedPrefsCtrl;
 
 public class SecurityGuide3 extends Fragment implements View.OnClickListener {
@@ -80,7 +75,7 @@ public class SecurityGuide3 extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.guide_3_select_phone) {
             // 跳转到系统的获取联系人界面
-            openSystemContactsActivity();
+            startSelectionActivity();
         } else if (mListener != null) {
             // 点击“上一步”/“下一步”时，保存号码
             SharedPrefsCtrl.putString(SharedPrefsCtrl.Constant.SJFD_SECURITY_PHONE, phone.getText().toString());
@@ -109,38 +104,20 @@ public class SecurityGuide3 extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
-    private void openSystemContactsActivity() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setData(ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
+    /**
+     * 开启 NumberSelectionActivity 获取电话号码
+     */
+    private void startSelectionActivity() {
+        Intent intent = new Intent();
+        intent.setAction(NumberSelectionActivity.ActionIntents.ACITON_PICK_CONTACT);
         startActivityForResult(intent, REQUEST_CODE_CONTACT);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null && requestCode == REQUEST_CODE_CONTACT) {
-            phone.setText(getSecurityPhone(data.getDataString()));
+        if (resultCode == Activity.RESULT_OK) {
+            phone.setText(data.getStringExtra("number"));
         }
-    }
-
-    public String getSecurityPhone(String uri) {
-        if (BuildConfig.DEBUG) Log.d("TEST", uri);
-        ContentResolver resolver = getActivity().getContentResolver();
-        Cursor cursor = resolver.query(
-                Uri.parse(uri),
-                new String[]{ // 查找的列
-                        ContactsContract.CommonDataKinds.Phone.NUMBER // 号码
-                },
-                null, // 条件
-                null, // 条件的参数
-                null  // 排序
-        );
-        if (cursor != null && cursor.moveToFirst()) {
-            String number = cursor.getString(0);
-            cursor.close();
-            return number;
-        }
-        return "";
     }
 
     /**
