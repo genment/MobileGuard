@@ -62,18 +62,11 @@ public class SecurityUtil {
     }
 
     /**
-     * 处理短信内容。
+     * 获取短信的手机号码和内容。
      *
-     * @param context 短信接收者
-     *                （{@link gmt.mobileguard.receiver.SmsReceivingReceiver#onReceive(Context, Intent)}）
-     *                接收到的 intent 对象，用于解析短信内容
-     * @param intent  短信接收者
-     *                （{@link gmt.mobileguard.receiver.SmsReceivingReceiver#onReceive(Context, Intent)}）
-     *                接收到的 intent 对象，用于播放音频
-     * @return 是否属于安全短信
+     * @return an String array of "[0]: phone number, [1]: sms body".
      */
-    public static boolean disposeSecuritySms(Context context, Intent intent) {
-        boolean result = true;
+    public static String[] getSmsAddressAndBody(Intent intent) {
         Object[] messages = (Object[]) intent.getSerializableExtra("pdus");
         StringBuilder messageBody = new StringBuilder(32);
         int pduCount = messages.length;
@@ -81,9 +74,24 @@ public class SecurityUtil {
         for (int i = 0; i < pduCount; i++) {
             byte[] pdu = (byte[]) messages[i];
             msgs[i] = SmsMessage.createFromPdu(pdu);
-            messageBody.append(msgs[i].getMessageBody());
+            messageBody.append(msgs[i].getDisplayMessageBody());
         }
-        switch (messageBody.toString()) {
+        return new String[]{
+                msgs[0].getDisplayOriginatingAddress(),
+                messageBody.toString()};
+    }
+
+    /**
+     * 处理短信内容。
+     *
+     * @param context 短信接收者
+     *                （{@link gmt.mobileguard.receiver.SmsReceivingReceiver#onReceive(Context, Intent)}）
+     *                接收到的 intent 对象，用于解析短信内容
+     * @return 是否属于安全短信
+     */
+    public static boolean checkSecuritySms(Context context, String msgBody) {
+        boolean result = true;
+        switch (msgBody) {
             case ACTION_LOCATION:
             case ACTION_LOCATION_MD5:
                 startLocationService(context);

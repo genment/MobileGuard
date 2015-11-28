@@ -151,17 +151,49 @@ public class BlacklistDao {
     /**
      * 是否黑名单
      */
-    public boolean isBlack(String number) {
+    public boolean isBlack(String number, String type) {
         boolean isBlack = false;
         SQLiteDatabase db = mHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT _id FROM blacklist WHERE number=?", new String[]{number});
+        Cursor cursor = db.rawQuery("SELECT _id, mode FROM blacklist WHERE number=? ", new String[]{number});
         if (cursor != null && cursor.moveToFirst()) {
-            isBlack = true;
             int id = cursor.getInt(0);
+            int mode = cursor.getInt(1);
+            if ("call".equals(type)) {
+                isBlack = (mode & 1) == 1;
+            } else if ("sms".equals(type)) {
+                isBlack = (mode & 2) == 2;
+            }
             updateCount(id);
             cursor.close();
         }
         db.close();
         return isBlack;
+    }
+
+    /**
+     * 保存被拦截的短信
+     */
+    public void saveSms(String[] addressAndBody) {
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        db.execSQL("INSERT INTO sms(number, message, timestamp) VALUES( ?, ?, ?)",
+                new Object[]{
+                        addressAndBody[0],
+                        addressAndBody[1],
+                        System.currentTimeMillis()
+                });
+        db.close();
+    }
+
+    /**
+     * 保存电话的拦截记录
+     */
+    public void saveCall(String number) {
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        db.execSQL("INSERT INTO call(number, timestamp) VALUES( ?, ?)",
+                new Object[]{
+                        number,
+                        System.currentTimeMillis()
+                });
+        db.close();
     }
 }

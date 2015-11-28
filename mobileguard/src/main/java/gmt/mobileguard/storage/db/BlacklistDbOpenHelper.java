@@ -15,8 +15,6 @@ public class BlacklistDbOpenHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "blacklist.db";
 
-//    private static BlacklistDbOpenHelper instance;
-
     public BlacklistDbOpenHelper(Context context) {
         super(context, DB_NAME, null, VERSION_CODE);
     }
@@ -24,22 +22,14 @@ public class BlacklistDbOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // blacklist table
-        db.execSQL("CREATE TABLE blacklist (_id integer primary key autoincrement, number varchar(20), mode int, description varchar(20), count int, attribution varchar(20) );");
+        db.execSQL("CREATE TABLE blacklist (_id INTEGER PRIMARY KEY AUTOINCREMENT, number TEXT, mode INT, description TEXT, count INT, attribution TEXT)");
+        // sms table
+        db.execSQL("CREATE TABLE sms (_id INTEGER PRIMARY KEY AUTOINCREMENT, number TEXT, message TEXT, timestamp INTEGER)");
+        // call table
+        db.execSQL("CREATE TABLE call (_id INTEGER PRIMARY KEY AUTOINCREMENT, number TEXT, timestamp INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
-
-/*
-    public static BlacklistDbOpenHelper getInstance(Context context) {
-        if (instance == null) {
-            synchronized (BlacklistDbOpenHelper.class) {
-                if (instance == null)
-                    instance = new BlacklistDbOpenHelper(context);
-            }
-        }
-        return instance;
-    }
-*/
 }
