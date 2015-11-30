@@ -16,8 +16,12 @@ public class InterceptUtil {
         BlacklistDao blacklistDao = new BlacklistDao(context);
         boolean isBlack = blacklistDao.isBlack(ab[0], type);
         if (isBlack) {
-            blacklistDao.saveSms(ab);
-            Log.e("Intercept", "number:" + ab[0] + "  message:" + ab[1]);
+            if ("sms".equals(type)) {
+                blacklistDao.saveSms(ab);
+                Log.i("Intercept", "number:" + ab[0] + "  message:" + ab[1]);
+            } else if ("call".equals(type)) {
+                blacklistDao.saveCall(ab[0]);
+            }
         }
         blacklistDao.close();
         return isBlack;

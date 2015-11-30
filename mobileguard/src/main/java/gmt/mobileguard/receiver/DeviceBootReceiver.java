@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import gmt.mobileguard.sevice.InterceptingService;
 import gmt.mobileguard.util.DeviceInfo;
 import gmt.mobileguard.util.EncryptUtil;
 import gmt.mobileguard.util.SecurityUtil;
@@ -16,6 +17,11 @@ public class DeviceBootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        checkSimInfo(context);
+        startInterceptingService(context);
+    }
+
+    private void checkSimInfo(Context context) {
         boolean securityStatus = SharedPrefsCtrl.getBoolean(SharedPrefsCtrl.Constant.SJFD_SECURITY_STATUS, false);
         if (securityStatus) {
             boolean isBind = SharedPrefsCtrl.getBoolean(SharedPrefsCtrl.Constant.SJFD_BIND_SIM, false);
@@ -27,5 +33,10 @@ public class DeviceBootReceiver extends BroadcastReceiver {
                 }
             }
         }
+    }
+
+    private void startInterceptingService(Context context) {
+        Intent intent = new Intent(context, InterceptingService.class);
+        context.startService(intent);
     }
 }
