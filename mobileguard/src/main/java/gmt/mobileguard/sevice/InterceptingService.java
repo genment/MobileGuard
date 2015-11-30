@@ -7,6 +7,10 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.android.internal.telephony.ITelephony;
+
+import java.lang.reflect.Method;
+
 import gmt.mobileguard.util.InterceptUtil;
 
 public class InterceptingService extends Service {
@@ -35,14 +39,26 @@ public class InterceptingService extends Service {
     private void checkBlack(String number) {
         boolean isBlack = InterceptUtil.checkIntercept(InterceptingService.this,
                 new String[]{number, null}, "call");
-        if (isBlack) {
-            endCall();
+        if (isBlack && endCall()) {
+            // TODO: 2015/12/1 显示通知？？？
             Log.i("InterceptingService", "------ 已拦截: " + number + " 的来电 ------");
         }
     }
 
-    private void endCall() {
-        // TODO: 2015/11/30 拦截黑名单号码
+    /**
+     * 参考：http://blog.sina.com.cn/s/blog_a28e3dd901018wky.html
+     */
+    private boolean endCall() {
+        try {
+            Class<?> telephonyManagerClass = TelephonyManager.class;
+            Method getITelephonyMethod = telephonyManagerClass.getDeclaredMethod("getITelephony", (Class[]) null);
+            getITelephonyMethod.setAccessible(true);
+            ITelephony iTelephonyObject = (ITelephony) getITelephonyMethod.invoke(mTelephonyManager, (Object[]) null);
+            return iTelephonyObject.endCall();
+        } catch (Exception e) {
+            // Never. Nothing to do.
+        }
+        return false;
     }
 
     PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
