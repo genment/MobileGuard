@@ -134,7 +134,8 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
 
         public void updateLastOneData() {
             BlackEntity blackEntity = mBlacklistDao.getLastOne();
-            if (mDatas.size() < 1 || blackEntity.getId() != mDatas.get(0).getId()) {
+            if (blackEntity != null
+                    && (mDatas.size() < 1 || blackEntity.getId() != mDatas.get(0).getId())) {
                 mDatas.add(0, blackEntity);
                 notifyItemInserted(0);
                 mBlacklist.scrollToPosition(0);
