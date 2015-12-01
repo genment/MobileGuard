@@ -38,8 +38,11 @@ public class CallingReceiver extends BroadcastReceiver {
 
         } else if (TelephonyManager.ACTION_PHONE_STATE_CHANGED.equals(action)) {
 
-            // 开启拦截服务
-            context.startService(intent.setClass(context, InterceptingService.class));
+            if (TelephonyManager.EXTRA_STATE_RINGING.equals(
+                    intent.getStringExtra(TelephonyManager.EXTRA_STATE))) {
+                // 开启拦截服务
+                context.startService(intent.setClass(context, InterceptingService.class));
+            }
         }
     }
 }
