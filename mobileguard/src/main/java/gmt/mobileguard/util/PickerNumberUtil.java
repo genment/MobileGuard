@@ -149,13 +149,13 @@ public class PickerNumberUtil {
         if (original.startsWith("+86")) { // 去掉开头的国际区号
             original = original.substring(3);
         }
-        StringBuilder sb = new StringBuilder(original);
+        int len = original.length();
+        StringBuilder sb = new StringBuilder(len);
         char c;
-        for (int i = 0; i < sb.length(); i++) {
-            c = sb.charAt(i);
-            if (!Character.isDigit(c)) {
-                sb.deleteCharAt(i);
-                --i;
+        for (int i = 0; i < len; i++) {
+            c = original.charAt(i);
+            if (Character.isDigit(c)) {
+                sb.append(c);
             }
         }
         return sb.toString();
