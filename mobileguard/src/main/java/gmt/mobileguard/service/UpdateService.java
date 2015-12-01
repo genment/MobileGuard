@@ -1,4 +1,4 @@
-package gmt.mobileguard.sevice;
+package gmt.mobileguard.service;
 
 import android.app.DownloadManager;
 import android.app.Service;
@@ -33,7 +33,6 @@ public class UpdateService extends Service {
 
     @Override
     public void onCreate() {
-        System.out.println("onCreate");
         manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
     }
 

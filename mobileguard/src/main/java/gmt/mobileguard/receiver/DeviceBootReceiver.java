@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import gmt.mobileguard.sevice.InterceptingService;
+import gmt.mobileguard.service.InterceptingService;
 import gmt.mobileguard.util.DeviceInfo;
 import gmt.mobileguard.util.EncryptUtil;
 import gmt.mobileguard.util.SecurityUtil;

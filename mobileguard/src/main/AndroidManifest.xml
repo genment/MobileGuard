@@ -72,9 +72,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".sevice.UpdateService" />
-        <service android:name=".sevice.LocationService" />
-        <service android:name=".sevice.InterceptingService" />
+        <service android:name=".service.UpdateService" />
+        <service android:name=".service.LocationService" />
+        <service android:name=".service.InterceptingService" />
 
         <receiver
             android:name=".receiver.DeviceBootReceiver"

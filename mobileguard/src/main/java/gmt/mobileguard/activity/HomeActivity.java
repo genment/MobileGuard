@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import gmt.mobileguard.R;
-import gmt.mobileguard.sevice.UpdateService;
+import gmt.mobileguard.service.UpdateService;
 import gmt.mobileguard.util.EncryptUtil;
 import gmt.mobileguard.util.SharedPrefsCtrl;
 

@@ -15,7 +15,7 @@ import android.text.TextUtils;
 import java.io.IOException;
 
 import gmt.mobileguard.R;
-import gmt.mobileguard.sevice.LocationService;
+import gmt.mobileguard.service.LocationService;
 
 /**
  * Project: MobileGuard

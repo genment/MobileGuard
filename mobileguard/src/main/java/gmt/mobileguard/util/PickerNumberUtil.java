@@ -63,7 +63,7 @@ public class PickerNumberUtil {
     public static List<Data> getDataFromSms(Context context) {
         List<Data> datas = new ArrayList<>();
         ContentResolver resolver = context.getContentResolver();
-        Cursor cursor = compatiblityUri(resolver);
+        Cursor cursor = compatibilityUri(resolver);
         if (cursor != null) {
             Data data;
             while (cursor.moveToNext()) {
@@ -87,7 +87,7 @@ public class PickerNumberUtil {
      * @param resolver ContentResolver
      * @return Cursor
      */
-    private static Cursor compatiblityUri(ContentResolver resolver) {
+    private static Cursor compatibilityUri(ContentResolver resolver) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             return resolver.query(
                     Telephony.Sms.Inbox.CONTENT_URI,

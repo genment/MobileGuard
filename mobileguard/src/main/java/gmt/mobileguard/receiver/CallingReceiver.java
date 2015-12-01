@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import gmt.mobileguard.sevice.InterceptingService;
+import gmt.mobileguard.service.InterceptingService;
 
 /**
  * <p>接受两种广播：外拨广播、电话状态广播</p>

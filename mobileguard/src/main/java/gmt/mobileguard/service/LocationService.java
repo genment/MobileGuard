@@ -1,4 +1,4 @@
-package gmt.mobileguard.sevice;
+package gmt.mobileguard.service;
 
 import android.app.Service;
 import android.content.Intent;
