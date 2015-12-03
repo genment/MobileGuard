@@ -20,7 +20,7 @@ import gmt.mobileguard.storage.db.entity.BlackEntity;
 
 public class EditBlackActivity extends AppCompatActivity {
 
-    private static final String EXTRA_KEY = "blacklist";
+    public static final String EXTRA_KEY = "blacklist";
     private static final int REQUEST_CODE_CALL_LOG = 0;
     private static final int REQUEST_CODE_SMS = 1;
     private static final int REQUEST_CODE_CONTACT = 2;

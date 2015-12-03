@@ -105,19 +105,27 @@ public class BlacklistDao {
     /**
      * 获取最新的一个黑名单
      */
+    public BlackEntity getOne(int id) {
+        SQLiteDatabase db = mHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM blacklist WHERE _id = ?",
+                new String[]{String.valueOf(id)});
+        BlackEntity blackEntity = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            blackEntity = fillBlackEntity(cursor, true);
+        }
+        db.close();
+        return blackEntity;
+    }
+
+    /**
+     * 获取最新的一个黑名单
+     */
     public BlackEntity getLastOne() {
         SQLiteDatabase db = mHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM blacklist order by _id DESC limit 1", null);
         BlackEntity blackEntity = null;
         if (cursor != null && cursor.moveToFirst()) {
-            blackEntity = new BlackEntity();
-            blackEntity.setId(cursor.getInt(0));
-            blackEntity.setNumber(cursor.getString(1));
-            blackEntity.setMode(cursor.getInt(2));
-            blackEntity.setDescription(cursor.getString(3));
-            blackEntity.setCount(cursor.getInt(4));
-            blackEntity.setAttribution(cursor.getString(5));
-            cursor.close();
+            blackEntity = fillBlackEntity(cursor, true);
         }
         db.close();
         return blackEntity;
@@ -131,16 +139,8 @@ public class BlacklistDao {
         Cursor cursor = db.rawQuery("SELECT * FROM blacklist order by _id DESC", null);
         List<BlackEntity> datas = new ArrayList<>();
         if (cursor != null && cursor.getCount() > 0) {
-            BlackEntity blackEntity;
             while (cursor.moveToNext()) {
-                blackEntity = new BlackEntity();
-                blackEntity.setId(cursor.getInt(0));
-                blackEntity.setNumber(cursor.getString(1));
-                blackEntity.setMode(cursor.getInt(2));
-                blackEntity.setDescription(cursor.getString(3));
-                blackEntity.setCount(cursor.getInt(4));
-                blackEntity.setAttribution(cursor.getString(5));
-                datas.add(blackEntity);
+                datas.add(fillBlackEntity(cursor, false));
             }
             cursor.close();
         }
@@ -195,5 +195,18 @@ public class BlacklistDao {
                         System.currentTimeMillis()
                 });
         db.close();
+    }
+
+    private BlackEntity fillBlackEntity(Cursor cursor, boolean closeCursor) {
+        BlackEntity entity = new BlackEntity();
+        entity.setId(cursor.getInt(0));
+        entity.setNumber(cursor.getString(1));
+        entity.setMode(cursor.getInt(2));
+        entity.setDescription(cursor.getString(3));
+        entity.setCount(cursor.getInt(4));
+        entity.setAttribution(cursor.getString(5));
+        if (closeCursor)
+            cursor.close();
+        return entity;
     }
 }

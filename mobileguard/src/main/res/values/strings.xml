@@ -45,6 +45,10 @@
     <string name="phone">电话</string>
     <string name="message">短信</string>
     <string name="all">全部</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="delete_all">删除全部</string>
+    <string name="clear">清空</string>
     <string name="stranger">陌生人</string>
     <string name="black_count">(%s)</string>
     <string name="tip_input_number">输入黑名单号码</string>

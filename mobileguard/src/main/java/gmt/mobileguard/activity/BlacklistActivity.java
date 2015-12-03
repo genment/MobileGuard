@@ -1,16 +1,22 @@
 package gmt.mobileguard.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -32,6 +38,18 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
     // DB
     private BlacklistDao mBlacklistDao;
 
+    private RecyclerViewAdapter mAdapter;
+
+    /**
+     * 标识进入 EditBlackActivity 的动作，如果是 true，表示添加，
+     * 如果是 false，表示编辑。
+     *
+     * @see #onRestart()
+     * @see #onClick(View)
+     * @see #onContextItemSelected(MenuItem)
+     */
+    private boolean mIsAddAction = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +63,10 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         mFab = (FloatingActionButton) findViewById(R.id.fab_add_blacklist);
         mFab.setOnClickListener(this);
 
+        mAdapter = new RecyclerViewAdapter(mBlacklistDao.getAll());
         mBlacklist = (RecyclerView) findViewById(R.id.blacklist);
         mBlacklist.setHasFixedSize(true);
-        mBlacklist.setAdapter(new RecyclerViewAdapter(mBlacklistDao.getAll()));
+        mBlacklist.setAdapter(mAdapter);
         mBlacklist.setLayoutManager(new LinearLayoutManager(this));
         mBlacklist.addItemDecoration(new RecyclerViewItemDecoration());
         mBlacklist.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -77,6 +96,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
      */
     @Override
     public void onClick(View v) {
+        mIsAddAction = true;
         startActivity(new Intent(BlacklistActivity.this, EditBlackActivity.class));
     }
 
@@ -86,8 +106,11 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onRestart() {
         super.onRestart();
-        RecyclerViewAdapter adapter = (RecyclerViewAdapter) mBlacklist.getAdapter();
-        adapter.updateLastOneData();
+        if (mIsAddAction) {
+            mAdapter.updateLastOneData();
+        } else {
+            mAdapter.changeData(mAdapter.onLongClickPosition);
+        }
     }
 
     /**
@@ -96,6 +119,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
         private List<BlackEntity> mDatas;
+        private int onLongClickPosition;
 
         public RecyclerViewAdapter(List<BlackEntity> datas) {
             this.mDatas = datas;
@@ -113,7 +137,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         public void onBindViewHolder(ViewHolder holder, int position) {
             BlackEntity black = mDatas.get(position);
             holder.blackNumber.setText(black.getNumber());
-            holder.blackDdescription.setText(black.getDescription());
+            holder.blackDescription.setText(black.getDescription());
             holder.blackAttribution.setText(black.getAttribution());
             holder.blackPhone.setChecked(black.getBlackPhone());
             holder.blackMessage.setChecked(black.getBlackMessage());
@@ -143,15 +167,21 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         }
 
         public void removeData(int position) {
+            mBlacklistDao.removeBlack(mDatas.get(position));
             mDatas.remove(position);
             notifyItemRemoved(position);
-            mBlacklistDao.removeBlack(mDatas.get(position));
         }
 
-        public void changeData(int position, BlackEntity blackEntity) {
+        public void clearDatas() {
+            notifyItemRangeRemoved(0, mDatas.size());
+            mDatas.clear();
+            mBlacklistDao.clearAllBlack();
+        }
+
+        public void changeData(int position) {
+            BlackEntity blackEntity = mBlacklistDao.getOne(mDatas.get(position).getId());
             mDatas.set(position, blackEntity);
             notifyItemChanged(position);
-            mBlacklistDao.updateBlack(blackEntity);
         }
 
         public void updateAllDatas() {
@@ -166,11 +196,13 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         /**
          * ViewHolder
          */
-        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        class ViewHolder extends RecyclerView.ViewHolder implements
+                View.OnClickListener,
+                View.OnLongClickListener {
 
             private TextView blackNumber;
             private TextView blackCount;
-            private TextView blackDdescription;
+            private TextView blackDescription;
             private TextView blackAttribution;
             private CheckBox blackPhone;
             private CheckBox blackMessage;
@@ -179,12 +211,12 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
                 super(itemView);
                 blackNumber = (TextView) itemView.findViewById(R.id.black_number);
                 blackCount = (TextView) itemView.findViewById(R.id.black_count);
-                blackDdescription = (TextView) itemView.findViewById(R.id.black_description);
+                blackDescription = (TextView) itemView.findViewById(R.id.black_description);
                 blackAttribution = (TextView) itemView.findViewById(R.id.black_attribution);
                 blackPhone = (CheckBox) itemView.findViewById(R.id.black_phone);
                 blackMessage = (CheckBox) itemView.findViewById(R.id.block_message);
 
-                itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
 
                 blackPhone.setOnClickListener(this);
                 blackMessage.setOnClickListener(this);
@@ -210,6 +242,13 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
                     }
                     changeMode(position);
                 }
+            }
+
+            @Override
+            public boolean onLongClick(View v) {
+                onLongClickPosition = getAdapterPosition();
+                registerForContextMenu(v);
+                return false;
             }
         }
     }
@@ -280,6 +319,62 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
 
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.addSubMenu(Menu.NONE, 1, Menu.NONE, R.string.clear).setHeaderTitle(R.string.delete_all);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == 1) {
+            if (mAdapter.getItemCount() > 0) {
+                new AlertDialog.Builder(this)
+                        .setMessage("确定要清空黑名单列表吗？清空后就不能拦截了。")
+                        .setPositiveButton(R.string.delete_all, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAdapter.clearDatas();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+            } else {
+                Snackbar.make(mBlacklist, "还没有黑名单呢。", Snackbar.LENGTH_SHORT).show();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle(mAdapter.mDatas.get(mAdapter.onLongClickPosition).getNumber());
+        menu.add(Menu.NONE, 1, Menu.NONE, R.string.edit);
+        menu.add(Menu.NONE, 2, Menu.NONE, R.string.delete);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+                mIsAddAction = false;
+                startActivity(new Intent(this, EditBlackActivity.class)
+                        .putExtra(EditBlackActivity.EXTRA_KEY,
+                                mAdapter.mDatas.get(mAdapter.onLongClickPosition)));
+                break;
+            case 2:
+                mAdapter.removeData(mAdapter.onLongClickPosition);
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onContextMenuClosed(Menu menu) {
+        menu.clear();
+        super.onContextMenuClosed(menu);
     }
 
     @Override

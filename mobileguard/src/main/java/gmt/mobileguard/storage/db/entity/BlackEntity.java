@@ -1,17 +1,44 @@
 package gmt.mobileguard.storage.db.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Project: MobileGuard
  * Package: gmt.mobileguard.storage.db.entity
  * Created by Genment at 2015/11/20 00:29.
  */
-public class BlackEntity {
+public class BlackEntity implements Parcelable {
     private int _id;
     private String number;
     private int mode;
     private String description;
     private String attribution;
     private int count;
+
+    public BlackEntity() {
+    }
+
+    protected BlackEntity(Parcel in) {
+        _id = in.readInt();
+        number = in.readString();
+        mode = in.readInt();
+        description = in.readString();
+        attribution = in.readString();
+        count = in.readInt();
+    }
+
+    public static final Creator<BlackEntity> CREATOR = new Creator<BlackEntity>() {
+        @Override
+        public BlackEntity createFromParcel(Parcel in) {
+            return new BlackEntity(in);
+        }
+
+        @Override
+        public BlackEntity[] newArray(int size) {
+            return new BlackEntity[size];
+        }
+    };
 
     public int getId() {
         return _id;
@@ -82,4 +109,20 @@ public class BlackEntity {
     public void setNumber(String number) {
         this.number = number;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(_id);
+        dest.writeString(number);
+        dest.writeInt(mode);
+        dest.writeString(description);
+        dest.writeString(attribution);
+        dest.writeInt(count);
+    }
+
 }
