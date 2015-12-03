@@ -30,14 +30,8 @@ import gmt.mobileguard.storage.db.entity.BlackEntity;
 
 public class BlacklistActivity extends AppCompatActivity implements View.OnClickListener {
 
-    // UI
-    private Toolbar mToolbar;
-    private FloatingActionButton mFab;
     private RecyclerView mBlacklist;
-
-    // DB
     private BlacklistDao mBlacklistDao;
-
     private RecyclerViewAdapter mAdapter;
 
     /**
@@ -57,11 +51,13 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
 
         mBlacklistDao = new BlacklistDao(this);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mFab = (FloatingActionButton) findViewById(R.id.fab_add_blacklist);
-        mFab.setOnClickListener(this);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add_blacklist);
+        fab.setOnClickListener(this);
 
         mAdapter = new RecyclerViewAdapter(mBlacklistDao.getAll());
         mBlacklist = (RecyclerView) findViewById(R.id.blacklist);
@@ -69,24 +65,6 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         mBlacklist.setAdapter(mAdapter);
         mBlacklist.setLayoutManager(new LinearLayoutManager(this));
         mBlacklist.addItemDecoration(new RecyclerViewItemDecoration());
-        mBlacklist.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            // Fab的显示状态，防止重复调用
-            boolean show = true;
-
-            // TODO: 2015/11/23  BUG：想办法把FAB显示出来，在隐藏FAB后，删除item到小于一屏时，FAB一直不显示
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                // dx < 0: 向左, dx > 0: 向右
-                // dy < 0: 向下, dy > 0: 向上
-                if (!show && dy < 0) {
-                    mFab.show();
-                    show = true;
-                } else if (show && dy > 0) {
-                    mFab.hide();
-                    show = false;
-                }
-            }
-        });
     }
 
     /**
@@ -128,7 +106,8 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         // 调用一屏
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
-            View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_blacklist, parent, false);
+            View item = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_blacklist, parent, false);
             return new ViewHolder(item);
         }
 
@@ -264,12 +243,14 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         private Drawable dividerDrawable;
 
         public RecyclerViewItemDecoration() {
-            dividerDrawable = getResources().getDrawable(android.R.drawable.divider_horizontal_bright);
+            dividerDrawable = getResources()
+                    .getDrawable(android.R.drawable.divider_horizontal_bright);
         }
 
         // item 偏移位置
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
             super.getItemOffsets(outRect, view, parent, state);
             if (dividerDrawable == null) {
                 return;
@@ -303,6 +284,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
             int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
             int childCount = parent.getChildCount();
 
+            int left = 0;
             int right = parent.getWidth();
             for (int i = 0; i < childCount; i++) {
                 //判断第一个item的下标是不是0，是则return，不需要draw divider
@@ -311,7 +293,6 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
                 }
                 View childView = parent.getChildAt(i);
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) childView.getLayoutParams();
-                int left = parent.getPaddingLeft() + childView.getPaddingLeft();
                 int bottom = childView.getTop() - params.topMargin;
                 int top = bottom - dividerDrawable.getIntrinsicHeight();
                 dividerDrawable.setBounds(left, top, right, bottom);
@@ -323,7 +304,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.addSubMenu(Menu.NONE, 1, Menu.NONE, R.string.clear).setHeaderTitle(R.string.delete_all);
+        menu.add(Menu.NONE, 1, Menu.NONE, R.string.clear);
         return super.onCreateOptionsMenu(menu);
     }
 
