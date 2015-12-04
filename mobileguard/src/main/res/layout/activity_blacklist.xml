@@ -33,6 +33,16 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_blacklist" />
 
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/tip_black_list_empty"
+        android:textColor="@color/md_grey_500"
+        android:textSize="30sp"
+        android:visibility="gone" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_blacklist"
         android:layout_width="wrap_content"

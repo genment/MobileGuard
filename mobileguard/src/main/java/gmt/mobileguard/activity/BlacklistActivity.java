@@ -98,9 +98,11 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
 
         private List<BlackEntity> mDatas;
         private int onLongClickPosition;
+        private View mEmptyView;
 
         public RecyclerViewAdapter(List<BlackEntity> datas) {
             this.mDatas = datas;
+            checkDataEmpty();
         }
 
         // 调用一屏
@@ -142,6 +144,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
                 mDatas.add(0, blackEntity);
                 notifyItemInserted(0);
                 mBlacklist.scrollToPosition(0);
+                checkDataEmpty();
             }
         }
 
@@ -149,12 +152,14 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
             mBlacklistDao.removeBlack(mDatas.get(position));
             mDatas.remove(position);
             notifyItemRemoved(position);
+            checkDataEmpty();
         }
 
         public void clearDatas() {
             notifyItemRangeRemoved(0, mDatas.size());
             mDatas.clear();
             mBlacklistDao.clearAllBlack();
+            checkDataEmpty();
         }
 
         public void changeData(int position) {
@@ -166,10 +171,22 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         public void updateAllDatas() {
             mDatas = mBlacklistDao.getAll();
             notifyItemRangeChanged(0, mDatas.size());
+            checkDataEmpty();
         }
 
         public void changeMode(int position) {
             mBlacklistDao.changeMode(mDatas.get(position));
+        }
+
+        private void checkDataEmpty() {
+            if (mEmptyView == null) {
+                mEmptyView = findViewById(R.id.emptyView);
+            }
+            if (mDatas.size() < 1) {
+                mEmptyView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyView.setVisibility(View.GONE);
+            }
         }
 
         /**
@@ -323,7 +340,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
                         .setNegativeButton("取消", null)
                         .show();
             } else {
-                Snackbar.make(mBlacklist, "还没有黑名单呢。", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mBlacklist, R.string.tip_black_list_empty, Snackbar.LENGTH_SHORT).show();
             }
         }
         return super.onOptionsItemSelected(item);
