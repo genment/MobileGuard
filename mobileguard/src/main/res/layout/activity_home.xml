@@ -6,9 +6,7 @@
     android:orientation="vertical"
     tools:context="gmt.mobileguard.activity.HomeActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/ToolbarStyle" />
+    <include layout="@layout/appbar" />
 
     <TextView
         android:id="@+id/home_notice"

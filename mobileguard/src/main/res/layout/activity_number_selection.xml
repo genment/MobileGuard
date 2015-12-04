@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="gmt.mobileguard.activity.NumberSelectionActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@id/toolbar"
-        style="@style/ToolbarStyle"
-        app:navigationIcon="@drawable/ic_back"
-        app:title="@string/title_number_selection" />
+    <include layout="@layout/appbar" />
 
     <FrameLayout
         android:id="@+id/list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar" />
+        android:layout_below="@id/appbar" />
 </RelativeLayout>

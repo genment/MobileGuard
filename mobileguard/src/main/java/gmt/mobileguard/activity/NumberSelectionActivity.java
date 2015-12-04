@@ -83,6 +83,8 @@ public class NumberSelectionActivity extends AppCompatActivity implements
     private void prepareSearchViewAndActionBar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

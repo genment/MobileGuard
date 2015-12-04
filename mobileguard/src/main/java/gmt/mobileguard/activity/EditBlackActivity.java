@@ -52,6 +52,8 @@ public class EditBlackActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mNumber = (EditText) findViewById(R.id.black_number);
         mAttribution = (TextView) findViewById(R.id.black_attribution);

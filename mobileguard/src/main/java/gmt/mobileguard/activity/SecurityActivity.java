@@ -39,6 +39,8 @@ public class SecurityActivity extends AppCompatActivity implements
             onStepButtonClicked(1);
         }
         setSupportActionBar(mToolbar); // 一定要在这里，要不然第一次进入向导时，标题不对
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
