@@ -163,7 +163,9 @@ public class BlacklistDao {
             } else if ("sms".equals(type)) {
                 isBlack = (mode & 2) == 2;
             }
-            updateCount(id);
+            if (isBlack) {
+                updateCount(id);
+            }
             cursor.close();
         }
         db.close();
