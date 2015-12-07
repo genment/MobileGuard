@@ -56,6 +56,14 @@
             android:label="@string/title_add_black"
             android:windowSoftInputMode="stateVisible" />
         <activity
+            android:name=".activity.AppManagerActivity"
+            android:label="@string/title_app_manager"
+            android:parentActivityName=".activity.HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.HomeActivity" />
+        </activity>
+        <activity
             android:name=".activity.NumberSelectionActivity"
             android:label="@string/title_number_selection">
             <intent-filter>

@@ -11,6 +11,7 @@
     <string name="title_blacklist">黑名单</string>
     <string name="title_add_black">添加黑名单</string>
     <string name="title_edit_black">编辑黑名单</string>
+    <string name="title_app_manager">APP管理</string>
     <string name="title_number_selection">选一个号码</string>
     <string name="prev_step">上一步</string>
     <string name="next_step">下一步</string>
@@ -58,6 +59,8 @@
     <string name="add_black_from_call_log">从通话记录选择</string>
     <string name="add_black_from_sms">从短信选择</string>
     <string name="add_black_from_contact">从联系人选择</string>
+    <string name="system_app">系统应用</string>
+    <string name="user_app">用户应用</string>
     <string-array name="add_black_from">
         <item>从通话记录选择</item>
         <item>从短信选择</item>
