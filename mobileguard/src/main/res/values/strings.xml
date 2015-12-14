@@ -61,6 +61,9 @@
     <string name="add_black_from_contact">从联系人选择</string>
     <string name="system_app">系统应用</string>
     <string name="user_app">用户应用</string>
+    <string name="detail">详情</string>
+    <string name="uninstall">卸载</string>
+    <string name="run">运行</string>
     <string-array name="add_black_from">
         <item>从通话记录选择</item>
         <item>从短信选择</item>

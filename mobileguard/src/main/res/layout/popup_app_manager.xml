@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/local_popup_bg"
+    android:orientation="horizontal">
+    <!-- TODO: 背景图太难看了，格格不入 -->
+    <TextView
+        android:id="@+id/app_run"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@android:drawable/ic_menu_slideshow"
+        android:gravity="center_horizontal"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingRight="@dimen/common_margin"
+        android:text="@string/run"
+        android:textColor="@color/md_white_1000" />
+
+    <TextView
+        android:id="@+id/app_uninstall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@android:drawable/ic_menu_delete"
+        android:gravity="center_horizontal"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingRight="@dimen/common_margin"
+        android:text="@string/uninstall"
+        android:textColor="@color/md_white_1000" />
+
+    <TextView
+        android:id="@+id/app_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@android:drawable/ic_menu_info_details"
+        android:gravity="center_horizontal"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingRight="@dimen/common_margin"
+        android:text="@string/detail"
+        android:textColor="@color/md_white_1000" />
+
+</LinearLayout>
