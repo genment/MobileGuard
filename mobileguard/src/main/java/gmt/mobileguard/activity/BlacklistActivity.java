@@ -2,9 +2,6 @@ package gmt.mobileguard.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,6 +24,7 @@ import java.util.List;
 import gmt.mobileguard.R;
 import gmt.mobileguard.storage.db.dao.BlacklistDao;
 import gmt.mobileguard.storage.db.entity.BlackEntity;
+import gmt.mobileguard.widget.CommonRecyclerViewItemDecoration;
 
 public class BlacklistActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,7 +62,7 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
         mBlacklist.setHasFixedSize(true);
         mBlacklist.setAdapter(mAdapter);
         mBlacklist.setLayoutManager(new LinearLayoutManager(this));
-        mBlacklist.addItemDecoration(new RecyclerViewItemDecoration());
+        mBlacklist.addItemDecoration(new CommonRecyclerViewItemDecoration(this));
     }
 
     /**
@@ -245,76 +243,6 @@ public class BlacklistActivity extends AppCompatActivity implements View.OnClick
                 onLongClickPosition = getAdapterPosition();
                 registerForContextMenu(v);
                 return false;
-            }
-        }
-    }
-
-
-    /**
-     * ItemDecoration
-     * <p/>
-     * From: http://willclub.me/android/2015/04/24/recyclerview3/
-     */
-    class RecyclerViewItemDecoration extends RecyclerView.ItemDecoration {
-
-        private Drawable dividerDrawable;
-
-        public RecyclerViewItemDecoration() {
-            dividerDrawable = getResources()
-                    .getDrawable(android.R.drawable.divider_horizontal_bright);
-        }
-
-        // item 偏移位置
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                                   RecyclerView.State state) {
-            super.getItemOffsets(outRect, view, parent, state);
-            if (dividerDrawable == null) {
-                return;
-            }
-
-            //如果是第一个item，不需要divider，所以直接return
-            if (parent.getChildLayoutPosition(view) < 1) {
-                return;
-            }
-
-            //相当于给itemView设置margin，给divider预留空间
-            outRect.top = dividerDrawable.getIntrinsicHeight();
-
-        }
-
-        // item 底部
-        @Override
-        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            super.onDraw(c, parent, state);
-        }
-
-        // item 顶部
-        @Override
-        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            super.onDrawOver(c, parent, state);
-            LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
-            if (layoutManager == null) {
-                return;
-            }
-
-            int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
-            int childCount = parent.getChildCount();
-
-            int left = 0;
-            int right = parent.getWidth();
-            for (int i = 0; i < childCount; i++) {
-                //判断第一个item的下标是不是0，是则return，不需要draw divider
-                if (i == 0 && firstVisiblePosition == 0) {
-                    continue;
-                }
-                View childView = parent.getChildAt(i);
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) childView.getLayoutParams();
-                int bottom = childView.getTop() - params.topMargin;
-                int top = bottom - dividerDrawable.getIntrinsicHeight();
-                dividerDrawable.setBounds(left, top, right, bottom);
-                dividerDrawable.draw(c);
-
             }
         }
     }
