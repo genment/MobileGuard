@@ -41,7 +41,7 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      */
     private Object mAssociatedObject;
 
-    protected SuperViewHolder(View itemView) {
+    public SuperViewHolder(View itemView) {
         super(itemView);
         mViews = new SparseArray<>();
     }
@@ -95,8 +95,8 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      * @return The SuperViewHolder for chaining.
      */
     public SuperViewHolder setCompoundDrawables(@IdRes int viewId,
-                                               @DrawableRes int left, @DrawableRes int top,
-                                               @DrawableRes int right, @DrawableRes int bottom) {
+                                                @DrawableRes int left, @DrawableRes int top,
+                                                @DrawableRes int right, @DrawableRes int bottom) {
         TextView tv = getView(viewId);
         tv.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         return this;
@@ -109,8 +109,8 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      * @return The SuperViewHolder for chaining.
      */
     public SuperViewHolder setCompoundDrawables(@IdRes int viewId,
-                                               @Nullable Drawable left, @Nullable Drawable top,
-                                               @Nullable Drawable right, @Nullable Drawable bottom) {
+                                                @Nullable Drawable left, @Nullable Drawable top,
+                                                @Nullable Drawable right, @Nullable Drawable bottom) {
         TextView tv = getView(viewId);
         tv.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         return this;
@@ -389,7 +389,7 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      * @return The SuperViewHolder for chaining.
      */
     public SuperViewHolder setOnClickListener(@IdRes int viewId,
-                                             @Nullable View.OnClickListener listener) {
+                                              @Nullable View.OnClickListener listener) {
         View view = getView(viewId);
         view.setOnClickListener(listener);
         return this;
@@ -403,7 +403,7 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      * @return The SuperViewHolder for chaining.
      */
     public SuperViewHolder setOnTouchListener(@IdRes int viewId,
-                                             @Nullable View.OnTouchListener listener) {
+                                              @Nullable View.OnTouchListener listener) {
         View view = getView(viewId);
         view.setOnTouchListener(listener);
         return this;
@@ -417,7 +417,7 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      * @return The SuperViewHolder for chaining.
      */
     public SuperViewHolder setOnLongClickListener(@IdRes int viewId,
-                                                 @Nullable View.OnLongClickListener listener) {
+                                                  @Nullable View.OnLongClickListener listener) {
         View view = getView(viewId);
         view.setOnLongClickListener(listener);
         return this;
@@ -431,7 +431,7 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      * @return The SuperViewHolder for chaining.
      */
     public SuperViewHolder setOnItemClickListener(@IdRes int viewId,
-                                                 @Nullable AdapterView.OnItemClickListener listener) {
+                                                  @Nullable AdapterView.OnItemClickListener listener) {
         AdapterView view = getView(viewId);
         view.setOnItemClickListener(listener);
         return this;
@@ -445,7 +445,7 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      * @return The SuperViewHolder for chaining.
      */
     public SuperViewHolder setOnItemLongClickListener(@IdRes int viewId,
-                                                     @Nullable AdapterView.OnItemLongClickListener listener) {
+                                                      @Nullable AdapterView.OnItemLongClickListener listener) {
         AdapterView view = getView(viewId);
         view.setOnItemLongClickListener(listener);
         return this;
@@ -459,7 +459,7 @@ public class SuperViewHolder extends RecyclerView.ViewHolder {
      * @return The SuperViewHolder for chaining.
      */
     public SuperViewHolder setOnItemSelectedClickListener(@IdRes int viewId,
-                                                         @Nullable AdapterView.OnItemSelectedListener listener) {
+                                                          @Nullable AdapterView.OnItemSelectedListener listener) {
         AdapterView view = getView(viewId);
         view.setOnItemSelectedListener(listener);
         return this;

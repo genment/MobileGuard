@@ -12,30 +12,30 @@ import java.util.List;
  * Package: gmt.mobileguard.widget
  * Created by Genment at 2015/12/21 08:00.
  */
-public abstract class EnhancedSuperAdapter<T> extends BaseSuperAdapter<T> {
+public abstract class EnhancedSuperListAdapter<T> extends SuperListAdapter<T> {
 
-    public EnhancedSuperAdapter(@NonNull Context context, @NonNull List<T> data,
-                                @LayoutRes int itemLayoutResId) {
+    public EnhancedSuperListAdapter(@NonNull Context context, @NonNull List<T> data,
+                                    @LayoutRes int itemLayoutResId) {
         super(context, data, itemLayoutResId);
     }
 
-    protected EnhancedSuperAdapter(@NonNull Context context, @NonNull List<T> data,
-                                   @LayoutRes int itemLayoutResId,
-                                   @Nullable MultiItemTypeSupport<T> multiItemTypeSupport) {
+    protected EnhancedSuperListAdapter(@NonNull Context context, @NonNull List<T> data,
+                                       @LayoutRes int itemLayoutResId,
+                                       @Nullable MultiItemTypeSupport<T> multiItemTypeSupport) {
         super(context, data, itemLayoutResId, multiItemTypeSupport);
     }
 
-    public EnhancedSuperAdapter(@NonNull Context context, @NonNull List<T> data,
-                                MultiItemTypeSupport<T> multiItemTypeSupport) {
+    public EnhancedSuperListAdapter(@NonNull Context context, @NonNull List<T> data,
+                                    MultiItemTypeSupport<T> multiItemTypeSupport) {
         super(context, data, multiItemTypeSupport);
     }
 
-    public EnhancedSuperAdapter(@NonNull Context context, @LayoutRes int itemLayoutResId) {
+    public EnhancedSuperListAdapter(@NonNull Context context, @LayoutRes int itemLayoutResId) {
         super(context, itemLayoutResId);
     }
 
-    public EnhancedSuperAdapter(@NonNull Context context,
-                                MultiItemTypeSupport<T> multiItemTypeSupport) {
+    public EnhancedSuperListAdapter(@NonNull Context context,
+                                    MultiItemTypeSupport<T> multiItemTypeSupport) {
         super(context, multiItemTypeSupport);
     }
 
@@ -52,7 +52,7 @@ public abstract class EnhancedSuperAdapter<T> extends BaseSuperAdapter<T> {
      *
      * @param holder      View Holder.
      * @param t           Object data. <strong>Note:</strong> This object should be override the
-     *                    {@link T#equals(Object)}.
+     *                    {@link T#equals(Object)} method.
      * @param itemChanged Whether or not the data object was changed.
      */
     public abstract void convert(SuperViewHolder holder, T t, boolean itemChanged);

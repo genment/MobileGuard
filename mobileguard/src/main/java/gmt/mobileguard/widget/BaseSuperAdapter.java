@@ -15,59 +15,33 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.SpinnerAdapter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 /**
  * Project: MobileGuard
  * Package: gmt.mobileguard.widget
- * Created by Genment at 2015/12/16 16:57.
+ * Created by Genment at 2015/12/22 16:57.
  */
-public abstract class BaseSuperAdapter<T> extends RecyclerView.Adapter<SuperViewHolder>
+public abstract class BaseSuperAdapter<T, VH extends SuperViewHolder>
+        extends RecyclerView.Adapter<VH>
         implements ListAdapter, SpinnerAdapter {
 
-    private final LayoutInflater mLayoutInflater;
-    private List<T> mDataList;
-    private int mItemLayoutResId;
     private final DataSetObservable mDataSetObservable = new DataSetObservable();
-    private MultiItemTypeSupport<T> mMultiItemTypeSupport;
-    private boolean mIsRecyclerView = true;
 
-    public BaseSuperAdapter(@NonNull Context context, @LayoutRes int itemLayoutResId) {
-        this(context, new ArrayList<T>(), itemLayoutResId, null);
+    protected int mItemLayoutResId;
+    protected boolean mIsRecyclerView = true;
+    protected LayoutInflater mLayoutInflater;
+    protected MultiItemTypeSupport<T> mMultiTypeSupport;
+
+    protected BaseSuperAdapter(@NonNull Context context, @LayoutRes int itemLayoutResId,
+                               @Nullable MultiItemTypeSupport<T> multiTypeSupport) {
+        mItemLayoutResId = itemLayoutResId;
+        mLayoutInflater = LayoutInflater.from(context);
+        mMultiTypeSupport = multiTypeSupport;
     }
 
-    public BaseSuperAdapter(@NonNull Context context, MultiItemTypeSupport<T> multiItemTypeSupport) {
-        this(context, new ArrayList<T>(), -1, multiItemTypeSupport);
+    public void setMultiItemTypeSupport(MultiItemTypeSupport<T> multiTypeSupport) {
+        this.mMultiTypeSupport = multiTypeSupport;
     }
 
-    public BaseSuperAdapter(@NonNull Context context, @NonNull List<T> data,
-                            @LayoutRes int itemLayoutResId) {
-        this(context, data, itemLayoutResId, null);
-    }
-
-    public BaseSuperAdapter(@NonNull Context context, @NonNull List<T> data,
-                            MultiItemTypeSupport<T> multiItemTypeSupport) {
-        this(context, data, -1, multiItemTypeSupport);
-    }
-
-    protected BaseSuperAdapter(@NonNull Context context, @NonNull List<T> data,
-                               @LayoutRes int itemLayoutResId,
-                               @Nullable MultiItemTypeSupport<T> multiItemTypeSupport) {
-        this.mDataList = data;
-        this.mItemLayoutResId = itemLayoutResId;
-        this.mLayoutInflater = LayoutInflater.from(context);
-        this.mMultiItemTypeSupport = multiItemTypeSupport;
-    }
-
-    public void setMultiItemTypeSupport(MultiItemTypeSupport<T> multiItemTypeSupport) {
-        this.mMultiItemTypeSupport = multiItemTypeSupport;
-    }
-
-    //********************************** AdapterView Adapter **********************************//
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
         mDataSetObservable.registerObserver(observer);
@@ -76,17 +50,6 @@ public abstract class BaseSuperAdapter<T> extends RecyclerView.Adapter<SuperView
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
         mDataSetObservable.unregisterObserver(observer);
-    }
-
-    /**
-     * Notifies the attached observers that the underlying data has been changed
-     * and any View reflecting the data set should refresh itself.
-     * <p/>
-     * <strong>ONLY</strong> for {@link android.widget.ListView ListView} and
-     * {@link android.widget.GridView GridView}
-     */
-    public void notifyAdapterViewDataSetChanged() {
-        mDataSetObservable.notifyChanged();
     }
 
     /**
@@ -101,71 +64,15 @@ public abstract class BaseSuperAdapter<T> extends RecyclerView.Adapter<SuperView
         mDataSetObservable.notifyInvalidated();
     }
 
-    @Override
-    public int getCount() {
-        return mDataList.size();
-    }
-
-    @Override
-    public T getItem(int position) {
-        return mDataList.get(position);
-    }
-
-    @Override
-    public boolean areAllItemsEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return true;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return mDataList.isEmpty();
-    }
-
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return getView(position, convertView, parent);
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        SuperViewHolder viewHolder;
-        if (convertView == null) {
-            mIsRecyclerView = false;
-            viewHolder = createViewHolder(parent, getItemViewType(position));
-            convertView = viewHolder.itemView;
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (SuperViewHolder) convertView.getTag();
-        }
-        bindViewHolder(viewHolder, position);
-        return convertView;
-    }
-
-    //********************************** RecyclerView Adapter **********************************//
-    @Override
-    public SuperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layout = mItemLayoutResId;
-        if (mMultiItemTypeSupport != null) {
-            layout = mMultiItemTypeSupport.getLayoutResId(viewType);
-        }
-        View itemView = mLayoutInflater.inflate(layout, parent, false);
-        return new SuperViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(SuperViewHolder holder, int position) {
-        T obj = mDataList.get(position);
-        convert(holder, obj);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataList.size();
+    /**
+     * Notifies the attached observers that the underlying data has been changed
+     * and any View reflecting the data set should refresh itself.
+     * <p/>
+     * <strong>ONLY</strong> for {@link android.widget.ListView ListView} and
+     * {@link android.widget.GridView GridView}
+     */
+    public void notifyAdapterViewDataSetChanged() {
+        mDataSetObservable.notifyChanged();
     }
 
     /**
@@ -184,7 +91,54 @@ public abstract class BaseSuperAdapter<T> extends RecyclerView.Adapter<SuperView
         super.notifyDataSetChanged();
     }
 
-    //********************************** Abstract Method **********************************//
+    @Override
+    public boolean areAllItemsEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return true;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return getCount() > 0;
+    }
+
+    @Override
+    public int getItemCount() {
+        return getCount();
+    }
+
+    @Override
+    public abstract T getItem(int position);
+
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        return getView(position, convertView, parent);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public View getView(int position, View convertView, ViewGroup parent) {
+        VH viewHolder;
+        if (convertView == null) {
+            mIsRecyclerView = false;
+            viewHolder = createViewHolder(parent, getItemViewType(position));
+            convertView = viewHolder.itemView;
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (VH) convertView.getTag();
+        }
+        bindViewHolder(viewHolder, position);
+        return convertView;
+    }
+
+    @Override
+    public void onBindViewHolder(VH holder, int position) {
+        convert(holder, getItem(position));
+    }
 
     /**
      * You MUST implement this method to convert the views. If you need to use multiple item type,
@@ -193,30 +147,22 @@ public abstract class BaseSuperAdapter<T> extends RecyclerView.Adapter<SuperView
      * @param holder view holder.
      * @param t      data object.
      */
-    public abstract void convert(SuperViewHolder holder, T t);
+    public abstract void convert(VH holder, T t);
 
-    //********************************** MultiItemType **********************************//
-
-    /**
-     * From AdapterView Adapter
-     */
-    @Override
-    public final int getViewTypeCount() {
-        if (mMultiItemTypeSupport != null) {
-            return mMultiItemTypeSupport.getViewTypeCount();
-        }
-        return 1;
-    }
-
-    /**
-     * From All
-     */
     @Override
     public final int getItemViewType(int position) {
-        if (mMultiItemTypeSupport != null) {
-            return mMultiItemTypeSupport.getItemViewType(position, mDataList.get(position));
+        if (mMultiTypeSupport != null) {
+            return mMultiTypeSupport.getItemViewType(position, getItem(position));
         }
         return 0;
+    }
+
+    @Override
+    public final int getViewTypeCount() {
+        if (mMultiTypeSupport != null) {
+            return mMultiTypeSupport.getViewTypeCount();
+        }
+        return 1;
     }
 
     /**
@@ -247,164 +193,6 @@ public abstract class BaseSuperAdapter<T> extends RecyclerView.Adapter<SuperView
          */
         protected int getViewTypeCount() {
             return 2;
-        }
-    }
-    //********************************** Data Operator **********************************//
-
-    /**
-     * Adds the specified object at the end of the list.
-     *
-     * @param object The object to add at the end of the list.
-     */
-    public void add(T object) {
-        int position = mDataList.size();
-        mDataList.add(object);
-        if (mIsRecyclerView) {
-            notifyItemInserted(position);
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Inserts the specified object at the specified index in the list.
-     *
-     * @param object The object to insert into the list.
-     * @param index  The index at which the object must be inserted.
-     */
-    public void insert(T object, int index) {
-        mDataList.add(index, object);
-        if (mIsRecyclerView) {
-            notifyItemInserted(index);
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Adds the specified Collection at the end of the list.
-     *
-     * @param collection The Collection to add at the end of the list.
-     */
-    public void addAll(Collection<? extends T> collection) {
-        int start = mDataList.size();
-        mDataList.addAll(collection);
-        if (mIsRecyclerView) {
-            notifyItemRangeInserted(start, collection.size());
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Adds the specified Collection at the specified index in the list.
-     *
-     * @param collection The Collection to add at the end of the list.
-     */
-    public void insertAll(int index, Collection<? extends T> collection) {
-        mDataList.addAll(index, collection);
-        if (mIsRecyclerView) {
-            notifyItemRangeInserted(index, collection.size());
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Replaces the specified object at the list with the other specified object.
-     */
-    public void set(T oldObj, T newObj) {
-        int index = mDataList.indexOf(oldObj);
-        set(index, newObj);
-    }
-
-    /**
-     * Replaces the object at the specified location in the list with the specified object.
-     */
-    public void set(int index, T object) {
-        mDataList.set(index, object);
-        if (mIsRecyclerView) {
-            notifyItemChanged(index);
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Removes the specified object from the list.
-     *
-     * @param object The object to remove.
-     */
-    public void remove(T object) {
-        int position = mDataList.indexOf(object);
-        mDataList.remove(object);
-        if (mIsRecyclerView) {
-            notifyItemRemoved(position);
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Removes the object at the specified index from the list.
-     *
-     * @param index The object to remove.
-     */
-    public void remove(int index) {
-        mDataList.remove(index);
-        if (mIsRecyclerView) {
-            notifyItemRemoved(index);
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Replaces all objects at the list with the other list.
-     */
-    public void replaceAll(Collection<? extends T> collection) {
-        int oldSize = mDataList.size();
-        int newSize = collection.size();
-        mDataList.clear();
-        mDataList.addAll(collection);
-        if (mIsRecyclerView) {
-            if (oldSize > newSize) {
-                notifyItemRangeRemoved(0, oldSize);
-                notifyItemRangeInserted(0, oldSize);
-            } else {
-                notifyItemRangeChanged(0, newSize);
-            }
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Remove all elements from the list.
-     */
-
-    public void clear() {
-        int size = mDataList.size();
-        mDataList.clear();
-        if (mIsRecyclerView) {
-            notifyItemRangeRemoved(0, size);
-        } else {
-            notifyAdapterViewDataSetChanged();
-        }
-    }
-
-    /**
-     * Sorts the content of this adapter using the specified comparator.
-     *
-     * @param comparator The comparator used to sort the objects contained
-     *                   in this adapter.
-     */
-    public void sort(Comparator<? super T> comparator) {
-        Collections.sort(mDataList, comparator);
-        if (mIsRecyclerView) {
-            notifyItemRangeChanged(0, mDataList.size());
-        } else {
-            notifyAdapterViewDataSetChanged();
         }
     }
 }
