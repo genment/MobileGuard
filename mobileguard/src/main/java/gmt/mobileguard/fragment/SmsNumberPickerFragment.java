@@ -1,18 +1,16 @@
 package gmt.mobileguard.fragment;
 
-import android.os.Bundle;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import gmt.mobileguard.R;
 import gmt.mobileguard.util.PickerNumberUtil;
+import gmt.mobileguard.widget.SuperCursorAdapter;
+import gmt.mobileguard.widget.SuperViewHolder;
 
 /**
  * Project: MobileGuard
@@ -20,49 +18,31 @@ import gmt.mobileguard.util.PickerNumberUtil;
  * Created by Genment at 2015/11/27 23:37.
  */
 public class SmsNumberPickerFragment extends BaseNumberPickerFragment {
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        List<Data> datas = PickerNumberUtil.getDataFromSms(getActivity());
-        setListAdapter(new SmsListAdapter(datas));
-    }
+    protected SuperCursorAdapter createAdapter() {
+        Cursor cursor = PickerNumberUtil.getSms(getActivity());
+        if (cursor != null) {
+            return new SuperCursorAdapter(getActivity(), cursor, R.layout.item_picker_sms, SuperCursorAdapter.NO_FLAGS) {
 
-    private class SmsListAdapter extends BasePickerAdapter<SmsListAdapter.ViewHolder> {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getInstance();
 
-        public SmsListAdapter(List<Data> datas) {
-            super(datas);
+                @Override
+                public void convert(SuperViewHolder holder, Cursor cursor) {
+                    String name = cursor.getString(1);
+                    if (TextUtils.isEmpty(name)) {
+                        name = "(未知)";
+                        holder.setTextColor(R.id.name, Color.GRAY);
+                    } else {
+                        holder.setTextColor(R.id.name, Color.BLACK);
+                    }
+                    holder.setText(R.id.name, name)
+                            .setText(R.id.number, cursor.getString(2))
+                            .setText(R.id.message, cursor.getString(3))
+                            .setText(R.id.time, sdf.format(new Date(cursor.getLong(4))));
+                }
+            };
         }
-
-        @Override
-        protected ViewHolder onCreateHolder(ViewGroup parent) {
-            View itemView = LayoutInflater.from(getActivity())
-                    .inflate(R.layout.item_picker_sms, parent, false);
-            return new ViewHolder(itemView);
-        }
-
-        @Override
-        protected void onBindViewHolder(ViewHolder viewHolder, int position) {
-            Data data = (Data) getItem(position);
-            viewHolder.name.setText(TextUtils.isEmpty(data.name) ? "(未知)" : data.name);
-            viewHolder.number.setText(data.number);
-            viewHolder.message.setText(data.message);
-            viewHolder.time.setText(sdf.format(new Date(data.lastTimeStamp)));
-        }
-
-        class ViewHolder extends BaseNumberPickerFragment.ViewHolder {
-            TextView name;
-            TextView number;
-            TextView time;
-            TextView message;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                name = (TextView) itemView.findViewById(R.id.name);
-                number = (TextView) itemView.findViewById(R.id.number);
-                message = (TextView) itemView.findViewById(R.id.message);
-                time = (TextView) itemView.findViewById(R.id.time);
-            }
-        }
+        return null;
     }
 }

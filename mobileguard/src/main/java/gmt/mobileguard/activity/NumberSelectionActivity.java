@@ -2,7 +2,11 @@ package gmt.mobileguard.activity;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.CallLog;
+import android.provider.ContactsContract;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -47,17 +51,50 @@ public class NumberSelectionActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListFragmentItemClick(BaseNumberPickerFragment.Data data) {
+    public void onListFragmentItemClick(Cursor c) {
         Intent intent = new Intent();
-        intent.putExtra("number", PickerNumberUtil.getPureNumber(data.number));
-        intent.putExtra("name", data.name);
+        intent.putExtra("number", PickerNumberUtil.getPureNumber(getNumber(c)));
+        intent.putExtra("name", getName(c));
         setResult(RESULT_OK, intent);
         finish(); // 选择后，finish。
+    }
+
+    private String getNumber(Cursor cursor) {
+        int columnIndex = -1;
+        switch (mActionCode) {
+            case ACTION_CODE_CALL_LOG:
+                columnIndex = cursor.getColumnIndex(CallLog.Calls.NUMBER);
+                break;
+            case ACTION_CODE_SMS:
+                columnIndex = cursor.getColumnIndex(Telephony.Sms.Inbox.ADDRESS);
+                break;
+            case ACTION_CODE_CONTACT:
+                columnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                break;
+        }
+        return cursor.getString(columnIndex);
+    }
+
+    private String getName(Cursor cursor) {
+        int columnIndex = -1;
+        switch (mActionCode) {
+            case ACTION_CODE_CALL_LOG:
+                columnIndex = cursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
+                break;
+            case ACTION_CODE_SMS:
+                // nothing.
+                break;
+            case ACTION_CODE_CONTACT:
+                columnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                break;
+        }
+        return cursor.getString(columnIndex);
     }
 
     /**
      * Creates the fragment based on the current request.
      */
+
     public void configureListFragment() {
         switch (mActionCode) {
             case ACTION_CODE_CALL_LOG: {

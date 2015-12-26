@@ -1,58 +1,37 @@
 package gmt.mobileguard.fragment;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import java.util.List;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.text.TextUtils;
 
 import gmt.mobileguard.R;
 import gmt.mobileguard.util.PickerNumberUtil;
+import gmt.mobileguard.widget.SuperCursorAdapter;
+import gmt.mobileguard.widget.SuperViewHolder;
 
 public class ContactNumberPickerFragment extends BaseNumberPickerFragment {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        List<Data> datas = PickerNumberUtil.getDataFromContact(getActivity());
-        setListAdapter(new ContactListAdapter(datas));
-    }
+    protected SuperCursorAdapter createAdapter() {
+        Cursor cursor = PickerNumberUtil.getContact(getActivity());
+        if (cursor != null) {
+            return new SuperCursorAdapter(getActivity(), cursor,
+                    R.layout.item_picker_contact, SuperCursorAdapter.NO_FLAGS) {
 
-    /**
-     * Adapter
-     */
-    private class ContactListAdapter extends BasePickerAdapter<ContactListAdapter.ViewHolder> {
-
-        public ContactListAdapter(List<Data> datas) {
-            super(datas);
+                @Override
+                public void convert(SuperViewHolder holder, Cursor cursor) {
+                    String name = cursor.getString(1);
+                    if (TextUtils.isEmpty(name)) {
+                        name = "(未知)";
+                        holder.setTextColor(R.id.name, Color.GRAY);
+                    } else {
+                        holder.setTextColor(R.id.name, Color.BLACK);
+                    }
+                    holder.setText(R.id.name, name)
+                            .setText(R.id.number, cursor.getString(2));
+                }
+            };
         }
-
-        @Override
-        public ViewHolder onCreateHolder(ViewGroup parent) {
-            View itemView = LayoutInflater.from(getActivity())
-                    .inflate(R.layout.item_picker_contact, parent, false);
-            return new ViewHolder(itemView);
-        }
-
-
-        @Override
-        protected void onBindViewHolder(ViewHolder viewHolder, int position) {
-            Data data = (Data) getItem(position);
-            viewHolder.name.setText(data.name);
-            viewHolder.number.setText(data.number);
-        }
-
-        class ViewHolder extends BaseNumberPickerFragment.ViewHolder {
-            TextView name;
-            TextView number;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                name = (TextView) itemView.findViewById(R.id.name);
-                number = (TextView) itemView.findViewById(R.id.number);
-            }
-        }
+        return null;
     }
 }

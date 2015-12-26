@@ -9,11 +9,6 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import gmt.mobileguard.fragment.BaseNumberPickerFragment.Data;
-
 /**
  * Project: MobileGuard
  * Package: gmt.mobileguard.util
@@ -27,8 +22,7 @@ public class PickerNumberUtil {
      * @param context Context
      * @return Call Log
      */
-    public static List<Data> getDataFromCallLog(Context context) {
-        List<Data> datas = new ArrayList<>();
+    public static Cursor getCallLogs(Context context) {
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(
                 CallLog.Calls.CONTENT_URI,
@@ -40,18 +34,9 @@ public class PickerNumberUtil {
                 },
                 null, null, CallLog.Calls.DEFAULT_SORT_ORDER);
         if (cursor != null) {
-            Data data;
-            while (cursor.moveToNext()) {
-                data = new Data();
-                data.id = cursor.getLong(0);
-                data.name = cursor.getString(1);
-                data.number = cursor.getString(2);
-                data.lastTimeStamp = cursor.getLong(3);
-                datas.add(data);
-            }
-            cursor.close();
+            return cursor;
         }
-        return datas;
+        return null;
     }
 
     /**
@@ -60,23 +45,13 @@ public class PickerNumberUtil {
      * @param context Context
      * @return SMS
      */
-    public static List<Data> getDataFromSms(Context context) {
-        List<Data> datas = new ArrayList<>();
+    public static Cursor getSms(Context context) {
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = compatibilityUri(resolver);
         if (cursor != null) {
-            Data data;
-            while (cursor.moveToNext()) {
-                data = new Data();
-                data.id = cursor.getLong(0);
-                data.number = cursor.getString(1);
-                data.message = cursor.getString(2);
-                data.lastTimeStamp = cursor.getLong(3);
-                datas.add(data);
-            }
-            cursor.close();
+            return cursor;
         }
-        return datas;
+        return null;
     }
 
     /**
@@ -93,6 +68,7 @@ public class PickerNumberUtil {
                     Telephony.Sms.Inbox.CONTENT_URI,
                     new String[]{
                             Telephony.Sms.Inbox._ID,
+                            Telephony.Sms.Inbox.PERSON,
                             Telephony.Sms.Inbox.ADDRESS,
                             Telephony.Sms.Inbox.BODY,
                             Telephony.Sms.Inbox.DATE,
@@ -102,7 +78,7 @@ public class PickerNumberUtil {
             return resolver.query(
                     Uri.parse("content://sms/inbox"),
                     new String[]{
-                            "_id", "address", "body", "date"
+                            "_id", "person", "address", "body", "date"
                     },
                     null, null, "date DESC");
         }
@@ -114,8 +90,7 @@ public class PickerNumberUtil {
      * @param context Context
      * @return Contact
      */
-    public static List<Data> getDataFromContact(Context context) {
-        List<Data> datas = new ArrayList<>();
+    public static Cursor getContact(Context context) {
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -126,17 +101,9 @@ public class PickerNumberUtil {
                 },
                 null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
         if (cursor != null) {
-            Data data;
-            while (cursor.moveToNext()) {
-                data = new Data();
-                data.id = cursor.getLong(0);
-                data.name = cursor.getString(1);
-                data.number = cursor.getString(2);
-                datas.add(data);
-            }
-            cursor.close();
+            return cursor;
         }
-        return datas;
+        return null;
     }
 
     /**
