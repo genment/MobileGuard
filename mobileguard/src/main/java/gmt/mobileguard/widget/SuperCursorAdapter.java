@@ -31,10 +31,12 @@ public abstract class SuperCursorAdapter extends BaseSuperAdapter<Cursor, SuperV
     private CursorFilter mCursorFilter;
     private FilterQueryProvider mFilterQueryProvider;
 
-    @Deprecated
-    public static final int FLAG_AUTO_REQUERY = 0x01;
+    public static final int NO_FLAGS = 0x0;
 
-    public static final int FLAG_REGISTER_CONTENT_OBSERVER = 0x02;
+    @Deprecated
+    public static final int FLAG_AUTO_REQUERY = 0x1;
+
+    public static final int FLAG_REGISTER_CONTENT_OBSERVER = 0x2;
 
     public SuperCursorAdapter(@NonNull Context context, @NonNull Cursor cursor,
                               @LayoutRes int itemLayoutResId, boolean autoRequery) {
